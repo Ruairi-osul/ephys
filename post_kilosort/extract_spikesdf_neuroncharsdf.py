@@ -67,7 +67,8 @@ def get_good_cluster_numbers(cluster_groups_df):
     return good_clusters_df['cluster_id'].values
 
 
-def get_neuron_chars(df, good_cluster_numbers):
+def get_neuron_chars(df, good_cluster_numbers, condition='Baseline'):
+    df = df.loc[df['condition'] == condition]
     all_neurons_container = {}
     for cluster in good_cluster_numbers:
         neuron = df.loc[df['spike_cluster'] == cluster]
