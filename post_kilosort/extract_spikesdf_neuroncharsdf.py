@@ -4,7 +4,8 @@ import pandas as pd
 import NeuroTools.signals as nt
 pd.options.mode.chained_assignment = None
 
-recordings_to_extract = ['2018-04-18']
+recordings_to_extract = ['2018-04-12_371b',
+                         '2018-04-17_401c']
 kilosort_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files\cat'
 spikes_df_csv_out_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\spikes_df'
 nrn_char_out_fol = r'C:\Users\Rory\raw_data\SERT_DREADD\neuron_characteristics'
