@@ -32,8 +32,8 @@ ROS 2018
 
 # params to change
 
-recordings_to_pack = ['unknown_2018-04-12_14-00-40_NO_CNO',
-                      'unknown_2018-04-12_15-01-27_CNO']
+recordings_to_pack = ['401b_2018-04-16_14-25-14_NO_CNO',
+                      '401b_2018-04-16_15-26-37_CNO']
 
 openephys_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\continuous'
 dat_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files'

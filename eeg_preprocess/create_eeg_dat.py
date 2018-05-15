@@ -34,18 +34,17 @@ ROS 2018
 
 # params to change
 
-recordings_to_pack = ['371a_2018-04-11_17-09-39_NO_CNO',
-                      '401a_2018-04-18_17-40-36_CNO',
-                      'CIT_WAY_1_2018-05-01_15-59-19_PRE',
-                      'CIT_WAY_02_2018-05-03_13-38-41_PRE']
+recordings_to_pack = ['401b_2018-04-16_14-25-14_NO_CNO',
+                      '401c_2018-04-17_13-35-07_NO_CNO',
+                      'unknown_2018-04-12_14-00-40_NO_CNO']
 
-openephys_folder = r'C:\Users\Rory\raw_data\CIT_WAY'
-dat_folder = r'C:\Users\Rory\raw_data\CIT_WAY\dat_files\eeg'
+openephys_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\continuous'
+dat_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files\eeg'
 
 # for cambridge: linear from top of first shank to bottom of second shank
 
 
-eeg_chan_nums = [33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
+eeg_chan_nums = [43, 44, 45,
                  46, 47, 48]
 
 chan_map = eeg_chan_nums
