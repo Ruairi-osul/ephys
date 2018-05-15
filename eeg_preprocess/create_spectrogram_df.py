@@ -9,7 +9,7 @@ import pandas as pd
 source_folder = r'D:\CIT_WAY\good_eegchans'
 recordings_to_extract = ['CIT_WAY_1_2018-05-01_15-59-19_PRE']
 
-out_folder = r'D:\SERT_DREADD\dfs\pds'
+out_folder = r'D:\CIT_WAY\dfs\pds'
 
 fs = 30000.0
 low_cutoff_lpf = 100
