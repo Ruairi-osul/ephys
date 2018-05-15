@@ -7,7 +7,9 @@ from scipy.signal import butter, lfilter
 import pandas as pd
 
 source_folder = r'D:\CIT_WAY\good_eegchans'
-recordings_to_extract = ['CIT_WAY_1_2018-05-01_15-59-19_PRE']
+recordings_to_extract = ['CIT_WAY_1_2018-05-01_17-05-11_cit',
+                         'CIT_WAY_1_2018-05-01_18-06-45_way',
+                         'CIT_WAY_02_2018-05-03_13-38-41_PRE']
 
 out_folder = r'D:\CIT_WAY\dfs\pds'
 

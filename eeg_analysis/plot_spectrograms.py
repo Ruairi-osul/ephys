@@ -7,7 +7,8 @@ from glob import glob
 sns.set()
 
 pds_folder = 'D:\CIT_WAY\dfs\pds'
-recordings_to_plot = ['CIT_WAY_1_2018-05-01_15-59-19_PRE']
+recordings_to_plot = ['CIT_WAY_1_2018-05-01_17-05-11_cit',
+                      'CIT_WAY_1_2018-05-01_18-06-45_way']
 
 fig_out_folder = r'D:\CIT_WAY\figures'
 
@@ -86,7 +87,6 @@ def main():
             recording_len = log_df.index.max().seconds
 
             low_freqs_df = log_df.iloc[:, :20]
-            print(low_freqs_df.info())
             plot_mean_power(dfs=[log_df, low_freqs_df],
                             recording=recording,
                             chan_lab=chan_label, dpi=300)
