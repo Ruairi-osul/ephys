@@ -8,4 +8,4 @@ class Options:
         self.operating_system = operating_system
         self.chan_map = chan_map
         self.ref_method = ref_method
-        self.sep = '\\' if self.openephys_folder == 'win' else '/'
+        self.sep = '\\' if self.operating_system == 'win' else '/'
