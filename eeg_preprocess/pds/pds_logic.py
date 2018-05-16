@@ -1,4 +1,4 @@
-from pds_funcs import *
+from pds.pds_funcs import *
 
 
 def main(ops):

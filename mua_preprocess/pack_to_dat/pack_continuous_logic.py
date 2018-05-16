@@ -3,7 +3,7 @@
 
 import os
 from OpenEphys import pack_2
-
+from classes import Options
 
 '''
 
