@@ -6,21 +6,27 @@ from scipy import signal as ss
 from scipy.signal import butter, lfilter
 import pandas as pd
 
-source_folder = r'D:\CIT_WAY\good_eegchans'
-recordings_to_extract = ['CIT_WAY_1_2018-05-01_17-05-11_cit',
-                         'CIT_WAY_1_2018-05-01_18-06-45_way',
-                         'CIT_WAY_02_2018-05-03_13-38-41_PRE']
 
-out_folder = r'D:\CIT_WAY\dfs\pds'
+class Options:
 
-fs = 30000.0
-low_cutoff_lpf = 100
-order_lpf = 5
-new_fs = 256
+    def __init__(self, source_folder, recordings_to_extract, out_folder, fs,
+                 low_cutoff_lpf, order_lpf, new_fs, secs_per_bin,
+                 operating_system, verbose=True):
+        self.source_folder = source_folder
+        self.recordings_to_extract = recordings_to_extract
+        self.out_folder = out_folder
+        self.fs = fs
+        self.low_cutoff_lpf = low_cutoff_lpf
+        self.order_lpf = order_lpf
+        self.new_fs = new_fs
+        self.secs_per_bin = secs_per_bin
+        self.operating_system = operating_system
+        self.verbose = verbose
+        self.sep = '\\' if self.operating_system == 'win' else '/'
 
 
-def load_data(source_folder, recording):
-    data_dir = '\\'.join([source_folder, recording])
+def load_data(source_folder, recording, sep):
+    data_dir = sep.join([source_folder, recording])
     os.chdir(data_dir)
     file_names = glob.glob("*.continuous")
     chans = [loadContinuous(file) for file in file_names]
@@ -45,7 +51,7 @@ def butter_lowpass_filter(data, low_cutoff, fs, order=5, verbose=True):
     return y_low
 
 
-def downsample(data, new_fs, verbose=True):
+def downsample(data, fs, new_fs, verbose=True):
     if verbose:
         print('Downsampling array')
     duration = np.shape(data)[0]/fs
@@ -56,10 +62,10 @@ def downsample(data, new_fs, verbose=True):
 def bin_psd_combine(data, new_fs, secs_per_bin=4):
     samples_per_bin = new_fs * secs_per_bin
     bin_container = np.array_split(data,
-                                   np.round(len(data)/samples_per_bin)+1)
+                                   np.round(len(data)/samples_per_bin))
     df_list = []
     for ind, bin_ in enumerate(bin_container):
-        fq, t, Sxx = ss.spectrogram(bin_, new_fs)
+        fq, t, Sxx = ss.spectrogram(bin_, new_fs, nperseg=secs_per_bin*new_fs)
         df = pd.DataFrame(data=Sxx,
                           columns=t,
                           index=fq).transpose()
@@ -78,38 +84,12 @@ def bin_psd_combine(data, new_fs, secs_per_bin=4):
     return df
 
 
-def save(recording, chan_lab, df, out_folder, verbose=True):
+def save(recording, chan_lab, df, out_folder, sep, verbose=True):
     chan_lab = chan_lab.split('.')[0][-4:]
-    recording_outf = '\\'.join([out_folder, recording])
+    recording_outf = sep.join([out_folder, recording])
     if not os.path.exists(recording_outf):
         os.mkdir(recording_outf)
-    filename = '\\'.join([recording_outf, recording]) + chan_lab + '.csv'
+    filename = sep.join([recording_outf, recording]) + chan_lab + '.csv'
     if verbose:
         print('Saving')
     df.to_csv(filename)
-
-
-def main(verbose=True):
-    for recording in recordings_to_extract:
-        chans, chan_labels = load_data(source_folder, recording)
-        if verbose:
-            print('Loaded:\t{}'.format(recording))
-        for ind, chan in enumerate(chans):
-            raw_data = chan['data']
-            label = chan_labels[ind]
-            data = butter_lowpass_filter(data=raw_data,
-                                         low_cutoff=low_cutoff_lpf,
-                                         fs=fs)
-            data = downsample(data=data,
-                              new_fs=new_fs)
-            df = bin_psd_combine(data, new_fs,
-                                 secs_per_bin=4)
-            save(recording=recording,
-                 chan_lab=label,
-                 df=df,
-                 out_folder=out_folder,
-                 verbose=True)
-
-
-if __name__ == '__main__':
-    main()
