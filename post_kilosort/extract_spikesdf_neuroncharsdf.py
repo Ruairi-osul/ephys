@@ -1,8 +1,25 @@
-import os
+sepimport os
 import numpy as np
 import pandas as pd
 import NeuroTools.signals as nt
 pd.options.mode.chained_assignment = None
+
+'''
+To be run following Spike Sorting with Kilosort and Phy
+Generates two csv files:
+    spikes_df: contains one  row for each spike arrising from 'good' clusters
+    neruons_characteristics: one row for each good cluster with columns
+                             containing summary statistics of that clusters
+                             firing properties
+
+Variables to change:
+    kilosort_folder = parent folder for dirs in which kilosort files are stored
+    recordings_to_extract = list of recordings recordings
+                            ** must be a list - even if a list of one recording
+
+
+'''
+
 
 recordings_to_extract = ['2018-04-18']
 kilosort_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files\cat'
@@ -10,6 +27,10 @@ spikes_df_csv_out_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\spikes_df'
 nrn_char_out_fol = r'C:\Users\Rory\raw_data\SERT_DREADD\neuron_characteristics'
 sampling_rate = 30000
 verbose = True
+operating_system = 'win'
+
+
+sep = '\\' if operating_system == 'win' else '/'
 
 
 def concatenate_columns(row):
@@ -28,8 +49,8 @@ def create_dirs(folder):
 
 
 def return_path(path_to_data, recording):
-    recording_folder = '\\'.join([path_to_data, recording])
-    return '\\'.join([recording_folder, recording]) + '.csv'
+    recording_folder = sep.join([path_to_data, recording])
+    return sep.join([recording_folder, recording]) + '.csv'
 
 
 def load_kilosort_arrays(recording):
@@ -72,7 +93,6 @@ def get_neuron_chars(df, good_cluster_numbers, condition='Baseline'):
     all_neurons_container = {}
     for cluster in good_cluster_numbers:
         neuron = df.loc[df['spike_cluster'] == cluster]
-
         spike_times = neuron['time'].values * 1000
         try:
             t_start = spike_times[0]
@@ -80,13 +100,11 @@ def get_neuron_chars(df, good_cluster_numbers, condition='Baseline'):
             spike_train_object = nt.SpikeTrain(spike_times,
                                                t_start=t_start,
                                                t_stop=t_stop)
-
             rate = spike_train_object.mean_rate()
             cv_isi = spike_train_object.cv_isi()
         except IndexError:
             print('Problem with cluster number:\t{}'.format(cluster))
             continue
-
         neuron_dict = {'cluster': cluster, 'rate': rate, 'cv_isi': cv_isi}
         all_neurons_container[cluster] = neuron_dict
     df = pd.DataFrame(data=all_neurons_container)
@@ -102,32 +120,26 @@ def label_neuron_chars(df):
     return df
 
 
-def main():
+def main(verbose=verbose):
     create_dirs(spikes_df_csv_out_folder)
     create_dirs(nrn_char_out_fol)
-
     for recording in recordings_to_extract:
         if verbose:
             print(recording + '\n')
             print('\nLoading Data:\t{}\n'.format(recording))
-
-        os.chdir('\\'.join([kilosort_folder, recording]))
-
+        os.chdir(sep.join([kilosort_folder, recording]))
         spike_clusters, spike_times, cluster_groups = load_kilosort_arrays(
             recording)
-
         good_cluster_numbers = get_good_cluster_numbers(cluster_groups)
         data = [spike_clusters.flatten(), spike_times.flatten()]
         df = create_good_spikes_df(data=data,
                                    good_cluster_numbers=good_cluster_numbers,
                                    sampling_rate=sampling_rate,
                                    verbose=verbose)
-
         if verbose:
             print('Saving Spikes df to csv')
-        df.to_csv('\\'.join([spikes_df_csv_out_folder, recording])
+        df.to_csv(sep.join([spikes_df_csv_out_folder, recording])
                   + '.csv')
-
         if verbose:
             print('Extracting Neuron Characteristics')
         df_chars = get_neuron_chars(df=df,
@@ -137,8 +149,8 @@ def main():
         df_chars = df_chars.set_index('cluster')
         if verbose:
             print('Saving Neuron Characteristics Dataframe')
-        df_chars.to_csv('\\'.join([nrn_char_out_fol,
-                                   recording])
+        df_chars.to_csv(sep.join([nrn_char_out_fol,
+                                  recording])
                         + '.csv')
 
 

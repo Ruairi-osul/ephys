@@ -37,7 +37,7 @@ recordings_to_pack = ['401b_2018-04-16_14-25-14_NO_CNO',
 
 openephys_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\continuous'
 dat_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files'
-
+operating_system = 'win'
 # for cambridge: linear from top of first shank to bottom of second shank
 
 
@@ -53,11 +53,12 @@ ref_method = 'ave'  # 'ave' for common average reference, otherwise chan nums
 
 # pack files
 
+sep = '\\' if operating_system == 'win' else '/'
 for recording_to_pack in recordings_to_pack:
     print(recording_to_pack)
-    raw_data = '\\'.join([openephys_folder, recording_to_pack])
-    dat_file_outfolder = '\\'.join([dat_folder, recording_to_pack])
-    dat_file_name = '\\'.join([dat_file_outfolder, recording_to_pack]) + '.dat'
+    raw_data = sep.join([openephys_folder, recording_to_pack])
+    dat_file_outfolder = sep.join([dat_folder, recording_to_pack])
+    dat_file_name = sep.join([dat_file_outfolder, recording_to_pack]) + '.dat'
 
     if not os.path.exists(dat_file_outfolder):
         os.makedirs(dat_file_outfolder)
