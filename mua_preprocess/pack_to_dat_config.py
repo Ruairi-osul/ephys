@@ -1,5 +1,5 @@
 from pack_to_dat.classes import Options
-
+from pack_to_dat.pack_continuous_logic import main
 '''
 
 This script converts many .continuous files to one .dat file
@@ -17,8 +17,13 @@ Change the following parameters:
         N.B. only use this if the channel map is not already configured during
         the recordings
 
-NOTE:
-    OpenEphys.py must be in the working directory
+    ref_method = Once the data is packed to a single dat file, a filter can be
+                 applied to increase the quality of the signal. Choose an
+                 integer to subtract that channel from all others. Use ave to
+                 apply a common average reference.
+
+    operating_system = the operating_system on which the sript is being run
+                       choose 'win' or 'unix'
 
 
 ROS 2018
@@ -36,3 +41,6 @@ ops = Options(recordings_to_pack=['401b_2018-04-16_14-25-14_NO_CNO',
               chan_map=cambridge_chan_map,
               ref_method='ave',
               operating_system='win')
+
+if __name__ == '__main__':
+    main(ops)
