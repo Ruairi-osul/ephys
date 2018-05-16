@@ -6,25 +6,26 @@ import seaborn as sns
 sns.set()
 
 
-def return_path(path_to_data, recording):
-    return '\\'.join([path_to_data, recording]) + '.csv'
-
-
-def fig_path(fig_type, fig_folder, recording):
-    if not os.path.exists('\\'.join([fig_folder, fig_type])):
-        os.mkdir('\\'.join([fig_folder, fig_type]))
-    return '\\'.join([fig_folder, fig_type, recording]) + '.png'
-
-
+path_to_data = r'C:\Users\Rory\raw_data\SERT_DREADD\neuron_characteristics'
+fig_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\figures'
 recordings_to_analyse = ['2018-04-10_391b',
                          '2018-04-11_371a',
                          '2018-04-12_371b',
                          '2018-04-17_401c']
-
-path_to_data = r'C:\Users\Rory\raw_data\SERT_DREADD\neuron_characteristics'
-fig_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\figures'
-
+operating_system = 'win'
 verbose = True
+
+sep = '\\' if operating_system == 'win' else '/'
+
+
+def return_path(path_to_data, recording):
+    return sep.join([path_to_data, recording]) + '.csv'
+
+
+def fig_path(fig_type, fig_folder, recording):
+    if not os.path.exists(sep.join([fig_folder, fig_type])):
+        os.mkdir(sep.join([fig_folder, fig_type]))
+    return sep.join([fig_folder, fig_type, recording]) + '.png'
 
 
 for recording in recordings_to_analyse:
