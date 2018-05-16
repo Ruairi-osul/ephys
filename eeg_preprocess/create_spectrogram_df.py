@@ -56,10 +56,10 @@ def downsample(data, new_fs, verbose=True):
 def bin_psd_combine(data, new_fs, secs_per_bin=4):
     samples_per_bin = new_fs * secs_per_bin
     bin_container = np.array_split(data,
-                                   np.round(len(data)/samples_per_bin)+1)
+                                   np.round(len(data)/samples_per_bin))
     df_list = []
     for ind, bin_ in enumerate(bin_container):
-        fq, t, Sxx = ss.spectrogram(bin_, new_fs)
+        fq, t, Sxx = ss.spectrogram(bin_, new_fs, nperseg=secs_per_bin*new_fs)
         df = pd.DataFrame(data=Sxx,
                           columns=t,
                           index=fq).transpose()
