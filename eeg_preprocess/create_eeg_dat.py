@@ -1,8 +1,8 @@
 
 # coding: utf-8
 
-import os
-from OpenEphys import pack_2
+from pack_todat_eeg.classes import Options
+from pack_todat_eeg.logic import main
 
 
 '''
@@ -34,41 +34,19 @@ ROS 2018
 
 '''
 
-# params to change
-
-recordings_to_pack = ['401b_2018-04-16_14-25-14_NO_CNO',
-                      '401c_2018-04-17_13-35-07_NO_CNO',
-                      'unknown_2018-04-12_14-00-40_NO_CNO']
-
-openephys_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\continuous'
-dat_folder = r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files\eeg'
-operating_system = 'win'
-# for cambridge: linear from top of first shank to bottom of second shank
-
-
 eeg_chan_nums = [43, 44, 45,
                  46, 47, 48]
 
-chan_map = eeg_chan_nums
+ops = Options(recordings_to_pack=['401b_2018-04-16_14-25-14_NO_CNO',
+                                  '401c_2018-04-17_13-35-07_NO_CNO',
+                                  'unknown_2018-04-12_14-00-40_NO_CNO'],
+              openephys_folder=r'C:\Users\Rory\raw_data\SERT_DREADD\continuous',
+              dat_folder=r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files\eeg',
+              operating_system='win',
+              chan_map=eeg_chan_nums,
+              ref_method=''
+              )
 
-ref_method = ''  # 'ave' for common average reference, otherwise chan nums
 
-
-# pack files
-sep = '\\' if operating_system == 'win' else '/'
-for recording_to_pack in recordings_to_pack:
-    print(recording_to_pack)
-    raw_data = sep.join([openephys_folder, recording_to_pack])
-    dat_file_outfolder = sep.join([dat_folder, recording_to_pack])
-    dat_file_name = sep.join([dat_file_outfolder, recording_to_pack]) + '.dat'
-
-    if not os.path.exists(dat_file_outfolder):
-        os.makedirs(dat_file_outfolder)
-
-    pack_2(folderpath=raw_data,
-           filename=dat_file_name,
-           channels=chan_map,
-           chprefix='CH',
-           dref=ref_method,
-           session='0',
-           source='100')
+if __name__ == '__main__':
+    main(ops)

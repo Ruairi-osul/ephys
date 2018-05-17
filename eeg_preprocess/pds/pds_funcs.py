@@ -33,36 +33,36 @@ def butter_lowpass_filter(data, low_cutoff, fs, order=5, verbose=True):
     return y_low
 
 
-def downsample(data, fs, new_fs, verbose=True):
+def downsample_fourier(data, fs, new_fs, verbose=True):
     if verbose:
         print('Downsampling array')
-    duration = np.shape(data)[0]/fs
-    new_shape = np.real(int(round(new_fs*duration)))
+    duration = np.shape(data)[0] / fs
+    new_shape = np.real(int(round(new_fs * duration)))
     return ss.resample(data, new_shape)
+
+
+def downsample_decimate(data, verbose=True):
+    for _ in range(10):
+        data = np.decimate(x=data, q=12, ftype='fir')
+    return data
 
 
 def bin_psd_combine(data, new_fs, secs_per_bin=4):
     samples_per_bin = new_fs * secs_per_bin
-    bin_container = np.array_split(data,
-                                   np.round(len(data)/samples_per_bin))
-    df_list = []
-    for ind, bin_ in enumerate(bin_container):
-        fq, t, Sxx = ss.spectrogram(bin_, new_fs, nperseg=secs_per_bin*new_fs)
-        df = pd.DataFrame(data=Sxx,
-                          columns=t,
-                          index=fq).transpose()
-        df = df.apply(np.mean, axis=0)
-        time = t[0] + (ind * secs_per_bin)
-        df = pd.DataFrame({'frequency': df.index.values,
-                           'frequency values': df.values,
-                           'time': time})
-        df['time'] = pd.to_timedelta(df['time'], unit='s')
-        df = df.set_index('time')
-        df = df.reset_index().pivot(index='time',
-                                    columns='frequency',
-                                    values='frequency values')
-        df_list.append(df)
-    df = pd.concat(df_list)
+
+    fq, time, Sxx = ss.spectrogram(data, new_fs, nperseg=secs_per_bin * new_fs)
+    df = pd.DataFrame(data=Sxx,
+                      columns=time,
+                      index=fq).transpose()
+    df = df.apply(np.mean, axis=0)
+    df = pd.DataFrame({'frequency': df.index.values,
+                       'frequency values': df.values,
+                       'time': time})
+    df['time'] = pd.to_timedelta(df['time'], unit='s')
+    df = df.set_index('time')
+    df = df.reset_index().pivot(index='time',
+                                columns='frequency',
+                                values='frequency values')
     return df
 
 

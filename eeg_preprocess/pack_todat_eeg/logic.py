@@ -1,6 +1,3 @@
-
-# coding: utf-8
-
 from OpenEphys import pack_2
 from funcs import gen_paths
 
@@ -13,10 +10,10 @@ def main(ops):
                                             sep=ops.sep,
                                             verbose=ops.verbose)
 
-        pack_2(folderpath=raw_data,
-               filename=dat_file_name,
-               channels=ops.chan_map,
-               chprefix='CH',
-               dref=ops.ref_method,
-               session='0',
-               source='100')
+    pack_2(folderpath=raw_data,
+           filename=dat_file_name,
+           channels=ops.chan_map,
+           chprefix='CH',
+           dref=ops.ref_method,
+           session='0',
+           source='100')
