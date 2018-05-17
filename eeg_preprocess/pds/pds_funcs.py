@@ -42,27 +42,30 @@ def downsample_fourier(data, fs, new_fs, verbose=True):
 
 
 def downsample_decimate(data, verbose=True):
-    for _ in range(10):
-        data = np.decimate(x=data, q=12, ftype='fir')
+    if verbose:
+        print('Downsampling array')
+    data = ss.decimate(x=data, q=12, ftype='fir')
+    data = ss.decimate(x=data, q=10, ftype='fir')
     return data
 
 
-def bin_psd_combine(data, new_fs, secs_per_bin=4):
+def bin_psd_combine(data, new_fs, noverlap=None, secs_per_bin=4, verbose=True):
+    if verbose:
+        print('Computing Spectrogram')
     samples_per_bin = new_fs * secs_per_bin
 
-    fq, time, Sxx = ss.spectrogram(data, new_fs, nperseg=secs_per_bin * new_fs)
+    fq, time, Sxx = ss.spectrogram(x=data,
+                                   fs=new_fs,
+                                   window=ss.get_window('hamming', samples_per_bin),
+                                   noverlap=noverlap,
+                                   nperseg=samples_per_bin)
     df = pd.DataFrame(data=Sxx,
                       columns=time,
                       index=fq).transpose()
-    df = df.apply(np.mean, axis=0)
-    df = pd.DataFrame({'frequency': df.index.values,
-                       'frequency values': df.values,
-                       'time': time})
+    df = df.reset_index()
+    df = df.rename(columns={'index': 'time'})
     df['time'] = pd.to_timedelta(df['time'], unit='s')
-    df = df.set_index('time')
-    df = df.reset_index().pivot(index='time',
-                                columns='frequency',
-                                values='frequency values')
+    df.set_index('time', inplace=True)
     return df
 
 
