@@ -49,7 +49,7 @@ def downsample_decimate(data, verbose=True):
     return data
 
 
-def bin_psd_combine(data, new_fs, noverlap=None, secs_per_bin=4, verbose=True):
+def compute_spectrum(data, new_fs, noverlap=None, secs_per_bin=4, verbose=True):
     if verbose:
         print('Computing Spectrogram')
     samples_per_bin = new_fs * secs_per_bin

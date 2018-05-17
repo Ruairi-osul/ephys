@@ -51,7 +51,7 @@ def plot_mean_power(dfs, recording, chan_lab, both, dpi, fig_out_folder, verbose
                                 recording=recording,
                                 chan_lab=chan_lab,
                                 sep=sep)
-
+    plt.tight_layout()
     plt.savefig(fname=filename, dpi=dpi)
 
 
@@ -101,6 +101,7 @@ def plot_spectrogram(dfs, recording, chan_lab, recording_len, dpi, verbose, both
                                     recording=recording,
                                     chan_lab=chan_lab,
                                     sep=sep)
+    plt.tight_layout()
     plt.savefig(fname=filename, dpi=dpi)
 
 
