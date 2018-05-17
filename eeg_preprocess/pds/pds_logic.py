@@ -14,9 +14,13 @@ def main(ops):
             data = butter_lowpass_filter(data=raw_data,
                                          low_cutoff=ops.low_cutoff_lpf,
                                          fs=ops.fs)
-            data = downsample(data=data,
-                              fs=ops.fs,
-                              new_fs=ops.new_fs)
+            if ops.downsample_method == 'fourier':
+                data = downsample_fourier(data=data,
+                                          fs=ops.fs,
+                                          new_fs=ops.new_fs)
+            else:
+                data = downsample_decimate(data=data,
+                                           )
             df = bin_psd_combine(data, ops.new_fs,
                                  secs_per_bin=4)
             save(recording=recording,
