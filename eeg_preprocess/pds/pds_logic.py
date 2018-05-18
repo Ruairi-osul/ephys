@@ -20,21 +20,19 @@ def main(ops):
             else:
                 data = downsample_decimate(data=raw_data)
 
-            data = butter_lowpass_filter(data=data,
-                                         low_cutoff=ops.low_cutoff_lpf,
-                                         fs=ops.new_fs)
-            if ops.spectrum_method == 'default':
-                df = compute_spectrum(data=data,
-                                      new_fs=ops.new_fs,
-                                      noverlap=ops.noverlap,
-                                      secs_per_bin=ops.secs_per_bin,
-                                      verbose=ops.verbose)
-            elif ops.spectrum_method == 'welch':
-                print('Not yet coded')
+            filtered_data = butter_lowpass_filter(data=data,
+                                                  low_cutoff=ops.low_cutoff_lpf,
+                                                  fs=ops.new_fs)
+
+            df = compute_spectrum(data=filtered_data,
+                                  new_fs=ops.new_fs,
+                                  noverlap=ops.noverlap,
+                                  secs_per_bin=ops.secs_per_bin,
+                                  verbose=ops.verbose)
 
             save(recording=recording,
                  chan_lab=label,
                  df=df,
                  out_folder=ops.out_folder,
                  sep=ops.sep,
-                 verbose=True)
+                 verbose=ops.verbose)
