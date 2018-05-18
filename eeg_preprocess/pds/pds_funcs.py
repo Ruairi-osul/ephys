@@ -18,18 +18,13 @@ def load_data(source_folder, recording, sep):
 def butter_lowpass(low_cutoff, fs, order=5):
     nyq = 0.5 * fs
     normal_low_cutoff = low_cutoff / nyq
-    b_low, a_low = butter(order,
-                          normal_low_cutoff,
-                          btype='lowpass',
-                          analog=False)
+    b_low, a_low = butter(order, normal_low_cutoff, btype='lowpass', analog=False)
     return b_low, a_low
 
 
-def butter_lowpass_filter(data, low_cutoff, fs, order=5, verbose=True):
-    if verbose:
-        print('Filtering data')
+def butter_lowpass_filter(data, low_cutoff, fs, order=5):
     b_low, a_low = butter_lowpass(low_cutoff, fs, order=order)
-    y_low = ss.filtfilt(b_low, a_low, data)
+    y_low = lfilter(b_low, a_low, data)
     return y_low
 
 
@@ -44,10 +39,8 @@ def downsample_fourier(data, fs, new_fs, verbose=True):
 def downsample_decimate(data, verbose=True):
     if verbose:
         print('Downsampling array')
-    print(data.shape)
     data = ss.decimate(x=data, q=12, ftype='fir')
     data = ss.decimate(x=data, q=10, ftype='fir')
-    print(data.shape)
     return data
 
 
