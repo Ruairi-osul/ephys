@@ -4,7 +4,7 @@ from neuron_heatmap.logic import main
 '''
 This script plots a heatmap of neuronal firing over time (one row per neuron, x is time).
 It relies of a spikes_df csv file (one row per spike, column for cluster id, column for time).
-
+Saves one figure per recording in the fig_dir.
 
 Parameters to change:
     recordings_to_analyse   = list of recordings to analyse (must be names of directories in data_dir)

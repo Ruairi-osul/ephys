@@ -6,6 +6,16 @@ pd.options.mode.chained_assignment = None
 
 
 def load_kilosort_arrays(recording):
+    '''
+    Loads arrays generated during kilosort into numpy arrays and pandas DataFrames
+    Parameters:
+        recording       = name of the recording being analysed
+    Returns:
+        spike_clusters  = numpy array of len(num_spikes) identifying the cluster from which each spike arrose
+        spike_times     = numpy array of len(num_spikes) identifying the time in samples at which each spike occured
+        cluster_groups  = pandas DataDrame with one row per cluster and column 'cluster_group' identifying whether
+                          that cluster had been marked as 'Noise', 'MUA' or 'Good'
+    '''
     spike_clusters = np.load('spike_clusters.npy')
     spike_times = np.load('spike_times.npy')
     cluster_groups = pd.read_csv('cluster_groups.csv', sep='\t')
@@ -18,6 +28,21 @@ def load_kilosort_arrays(recording):
 
 
 def load_data(recording, kilosort_folder, verbose, sep):
+    '''
+    Loads arrays generated during kilosort into numpy arrays and pandas DataFrames
+    Parameters:
+        recording       = name of the recording being analysed
+        kilosort_folder = the name of the root directory in which subdirectories for each recording are stored
+                          inside the sub-directories should be the files generated during spike sorting with
+                          kilosort and phy
+        verbose         = True or False
+        sep             = os directory delimeter e.g. '/'
+    Returns:
+        spike_clusters  = numpy array of len(num_spikes) identifying the cluster from which each spike arrose
+        spike_times     = numpy array of len(num_spikes) identifying the time in samples at which each spike occured
+        cluster_groups  = pandas DataDrame with one row per cluster and column
+                          'cluster_group' identifying whetherthat cluster had been marked as 'Noise', 'MUA' or 'Good'
+    '''
     if verbose:
         print('\nLoading Data:\t{}\n'.format(recording))
     os.chdir(sep.join([kilosort_folder, recording]))
@@ -27,11 +52,24 @@ def load_data(recording, kilosort_folder, verbose, sep):
 
 
 def get_good_cluster_numbers(cluster_groups_df):
+    '''
+    Takes the cluster_groups pandas DataFrame fomed during data loading and returns a numpy array of cluster
+    ids defined as 'Good' during kilosort and phy spike sorting
+    Parameters:
+        cluster_groups_df   = the pandas DataFrame containing information on which cluster is 'Good', 'Noise' etc.
+    Returns:
+        A numpy array of 'Good' cluster ids
+    '''
     good_clusters_df = cluster_groups_df.loc[cluster_groups_df['group'] == 'good', :]
     return good_clusters_df['cluster_id'].values
 
 
 def create_dirs(folder):
+    '''
+    Takes a direcotry and checks whether it already exists, if it doesn't, it creates it
+    Parameters:
+        folder = folder to make
+    '''
     if not os.path.exists(folder):
         os.mkdir(folder)
 
@@ -39,6 +77,22 @@ def create_dirs(folder):
 def create_good_spikes_df(data, good_cluster_numbers,
                           sampling_rate, verbose, recording, experiment,
                           spikes_df_csv_out_folder, sep):
+    '''
+    Uses numpy arrays containing information generated during kilosort and phy spike sorting
+    to generate a tidy csv file with one row per spike and columns containg cluster_id (only 'Good' clusters) and time
+    Saves as well as returns tidy csv as a pandas DataFrame
+    Parameters:
+        data                        = list of arrays contains in spike_cluster and spike_time kilosort files
+        good_cluster_numbers        = numpy array of cluster ids of clusters perviously marked as 'Good'
+        sampling_rate               = sampling rate of the recording (used to convert between samples and time)
+        verbose                     = True or False
+        recording                   = name of the recording being analysed
+        experiment                  = category of experiment ('CNO' or 'CIT')
+        spikes_df_csv_out_folder    = root folder for output csv files
+        sep                         = os directory serperator e.g. '/'
+    Returns:
+        df                          = tidy pandas df of spike information
+    '''
     if verbose:
         print('Creating creating good_spikes_df')
     df = pd.DataFrame(data)
@@ -59,12 +113,30 @@ def create_good_spikes_df(data, good_cluster_numbers,
 
 
 def return_path(path_to_data, recording, sep):
+    '''
+    Creates a subdirecotry within the root directory for the recording
+    returns the absolute path to a csv file within that directory
+    Parameters:
+        path_to_data    = name of the root folder for the csv file
+        recording       = name of the current recording
+        sep             = operating system serperator e.g. '/'
+    Returns:
+        The absolute path to a csv file in the new subdirectory
+    '''
     recording_folder = sep.join([path_to_data, recording])
     create_dirs(recording_folder)
     return sep.join([recording_folder, recording]) + '.csv'
 
 
 def add_condition(df, experiment):
+    '''
+    Given the name of the experiment, adds a condtion to a tidy pandas DataFrame
+    Parameters:
+        df              = pandas DataFrame containg spiking information (one row per spike)
+        experiment      = Name of experiment e.g 'CIT' or 'CNO'
+    Returns:
+        tidy pandas DataFrame with added 'condition' column
+    '''
     if experiment == 'DREADD':
         df['condition'] = (df['time'] <= 3600).map({True: 'Baseline',
                                                     False: 'CNO'})
@@ -76,13 +148,24 @@ def add_condition(df, experiment):
                 return 'CIT'
             else:
                 return 'WAY'
-
         df['condition'] = df.apply(citalopram_mapper, axis=1)
     return df
 
 
 def get_neuron_chars(df, good_cluster_numbers, verbose, sep, recording, out_dir,
                      condition='Baseline'):
+    '''
+    Takes a tidy pandas DataFrame (one row per spike) and calculates summary statistics over a condition.
+    Outputs the result to a csv file
+    Parameters:
+        df                          = tidy pandas df of spiking data (one row per spike; only good clusters etc.)
+        good_cluster_numbers        = array of ids of clusters marked as 'Good' during spike sorting
+        verbose                     = True or False
+        sep                         = operating system serperator e.g. '/'
+        recording                   = name of the recording being analysed
+        out_dir                     = root direcotry for output csv
+        condition                   = condition over which statistics will be calculated
+    '''
     if verbose:
         print('Extracting Neuron Characteristics')
     df = df.loc[df['condition'] == condition]
@@ -114,6 +197,13 @@ def get_neuron_chars(df, good_cluster_numbers, verbose, sep, recording, out_dir,
 
 
 def label_neuron_chars(df):
+    '''
+    Adds columns to a pandas df containg categories based on firing rates
+    Parameters:
+        df      = df containg summary statistics of neuron firing patterns
+    Returns
+        df      = df containg new rows with categorical information
+    '''
     df['firing_cat'] = (df['rate'] <= 4).map({True: 'slow', False: 'fast'})
     df['regularity_cat'] = (df['cv_isi'] <= 0.6).map({True: 'regular',
                                                       False: 'irregular'})
@@ -122,4 +212,7 @@ def label_neuron_chars(df):
 
 
 def concatenate_columns(row):
+    '''
+    Used to concatenate columns of a pandas DataFrame
+    '''
     return ' '.join([row['firing_cat'], row['regularity_cat']])

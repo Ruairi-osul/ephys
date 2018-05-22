@@ -132,6 +132,8 @@ def plot_heat(df, dpi, vmin, vmax, method, recording, fig_dir, sep, verbose):
         fig_dir     = name of the root figure directory
         sep         = os seperator e.g. '/'
         verbose     = True or False
+    TODO:
+        create line at which conditions change
     '''
     if verbose:
         print('Plotting Heatmap...')

@@ -3,6 +3,8 @@ from extract_neuron_chars.logic import main
 
 '''
 To be run following Spike Sorting with Kilosort and Phy
+*** NeuroTools must be installed!
+
 Generates two csv files:
     spikes_df                = contains one  row for each spike arrising from 'good' clusters
     neruons_characteristics  = one row for each good cluster with columns
