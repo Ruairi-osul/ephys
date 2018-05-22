@@ -1,9 +1,17 @@
-# ruairitran
-sharplab oxford
+# ephys
+Set up for code sharing between sharplab, Oxford and the lab of Dr Kongfatt Wong-Lin, Ulster University
 
-Contains python scripts and jupyter notebooks for preprocessing and analysis of EEG and silicon probe data
+Contains code scripts for preprocessing and analysis of EEG and silicon probe data.
 
 Ruairi O'Sullivan and Tran Tran 2018
+
+## How to run the python code
+Requires libraries associated with an anaconda python install: https://conda.io/docs/user-guide/install/download.html
+
+  - Clone the repository and install anaconda
+  - Find the script you would like to run and open its associated \*_config.py*_ in a text editor
+  - Edit the parameters in the options file
+  - Save and run the config file at the command line
 
 ## Directories
 
