@@ -1,6 +1,12 @@
 from OpenEphys import pack_2
 from funcs import gen_paths
 
+'''
+Logic for EEG pack to dat
+    - generate paths to data and dat out folder
+    - pack and save dat file
+'''
+
 
 def main(ops):
     for recording_to_pack in ops.recordings_to_pack:

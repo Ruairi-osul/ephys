@@ -1,8 +1,14 @@
 
 # coding: utf-8
 
-from pack_to_dat.OpenEphys import pack_2
-from pack_to_dat.funcs import gen_paths
+from mua_pack_to_dat.OpenEphys import pack_2
+from mua_pack_to_dat.funcs import gen_paths
+
+'''
+logic for mua_pack_to_dat
+    - generate paths to data and dat out folder
+    - pack and save dat file
+'''
 
 
 def main(ops):

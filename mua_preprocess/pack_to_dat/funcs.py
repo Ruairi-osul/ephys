@@ -2,6 +2,15 @@ import os
 
 
 def gen_paths(openephys_folder, recording, dat_folder, sep, verbose):
+    '''
+    Generates absolute path to raw data and a direcory for the dat file
+    Parameters:
+        openephys_folder    = root directory of continuous files
+        recording           = name of subdirectory in which continuous files are stored
+        dat_folder          = root directory of dat files
+        sep                 = os serporator e.g. '\\'
+        verbose             = True or False
+    '''
     if verbose:
         print('\n\n\nNow packing recording:\t{}'.format(recording))
         print('Creating Directories for Dat Files....')

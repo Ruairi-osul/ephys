@@ -9,20 +9,17 @@ from pack_todat_eeg.logic import main
 
 This script converts many .continuous files to one .dat file
 It does this with the purpose of creating one .dat file for all the EEG
-channels
+channels of interest
 
-Change the following parameters:
-    openephys_folder = folder containing folders of .continuous files
+Change the following parameters in the Options call:
+    openephys_folder = root directory of subdirectories containing .continuous files
 
     recordings_to_pack = list of subfolder names (containing .continuous files)
         within openephys_folder of the recordings you wish to pack
 
     dat_folder = output folder for the packed .dat file
 
-    chan_map = rearrange channel labels such that channels most physically
-        close to each other have consecutive labels
-        N.B. only use this if the channel map is not already configured during
-        the recordings
+    chan_map = rearrange channel labels in the eeg_chan_nums variable
 
     operating_system = 'win' if windows, 'unix' if anything else
 
