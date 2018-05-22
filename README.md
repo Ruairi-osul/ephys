@@ -15,11 +15,19 @@ Requires libraries associated with an anaconda python install: https://conda.io/
 
 ## Directories
 
+Note: Some scripts in analysis directories are dependant on intemetiary .csv files created by the preprocessessing scripts. Make sure to read the documentation at the top of each script before running it.
+
 ### eeg_preprocess
-scirpts for reading raw EEG data stored in .continuous files and creating spectrogram data stored in .csv files
+Contains two scripts for preprocessing of raw EEG data stored in .continuous files.
+
+#### create_eeg_dat
+Packs data from many .continuous EEG files into one binary .dat file.
+
+#### pds
+Create a csv file of power spectral density overtime. 
 
 ### mua_preprocess
-scirpts for reading raw EEG data stored in .continuous files, applying filters and writing to a .dat file
+Contains scirpts for reading raw EEG data stored in .continuous files, applying filters and writing to a .dat file
 
 ### post_kilosort
 read output of kilosort into tidy .csv files. Extract characteristics of good clusters and describe their firing patterns
