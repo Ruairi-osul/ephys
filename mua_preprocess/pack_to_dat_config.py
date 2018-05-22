@@ -34,13 +34,14 @@ cambridge_chan_map = [22, 17, 28, 25, 29, 26, 20, 23,
                       6, 1, 12, 9, 13, 10, 4, 7, 5, 11,
                       15, 2, 14, 3, 8, 16]
 
-ops = Options(recordings_to_pack=['401b_2018-04-16_14-25-14_NO_CNO',
-                                  '401b_2018-04-16_15-26-37_CNO'],
-              openephys_folder=r'C:\Users\Rory\raw_data\SERT_DREADD\continuous',
-              dat_folder=r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files',
+ops = Options(recordings_to_pack=['CIT_WAY_05_2018-05-20_16-16-49_PRE',
+                                  'CIT_WAY_05_2018-05-20_17-17-39_CIT'],
+              openephys_folder=r'C:\Users\Rory\raw_data\CIT_WAY',
+              dat_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files',
               chan_map=cambridge_chan_map,
               ref_method='ave',
-              operating_system='win')
+              operating_system='win',
+              verbose=True)
 
 if __name__ == '__main__':
     main(ops)

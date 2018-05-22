@@ -31,7 +31,7 @@ for recording in recordings_to_analyse:
                            aggfunc='count')
 
     df_ts_sec = df_ts.resample('s').count()
-    fr_rolling = df_ts_sec.rolling(60*2).mean()
+    fr_rolling = df_ts_sec.rolling(60 * 2).mean()
     # groupby spike_cluster
 
     x = fr_rolling.transpose().apply(lambda col:
@@ -39,14 +39,14 @@ for recording in recordings_to_analyse:
                                       ).divide(baseline_stds))
     x = x.reindex(baseline_sorted.index)
     recording_len = x.transpose().index.max().seconds
-    x_pick_pos = round(recording_len/4)
+    x_pick_pos = round(recording_len / 4)
     f, a = plt.subplots(figsize=(19, 9))
     sns.heatmap(x, ax=a, cmap='coolwarm', vmin=-3, vmax=3,
                 xticklabels=x_pick_pos)
     a.set_ylabel('Neuron Number\nSorting by baseline firing rate in ascending order (slowest on top)')
     a.set_title('Firing Rate Normalised to Neuron Mean During Baseline\nTwo minute rolling window')
     a.set_xticklabels(list(map(lambda num:
-                               str(round(recording_len/4/60 * num, -1)),
+                               str(round(recording_len / 4 / 60 * num, -1)),
                                [0, 1, 2, 3])))
     a.set_xlabel('Time (min)\nCNO administration at 60 minutes')
     plt.savefig(r'C:\Users\Rory\raw_data\SERT_DREADD\figures\heat\{}.png'.format(
