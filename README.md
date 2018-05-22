@@ -8,6 +8,8 @@ Ruairi O'Sullivan and Tran Tran 2018
 ## How to run the python code
 Requires libraries associated with an anaconda python install: https://conda.io/docs/user-guide/install/download.html
 
+Some scripts also require NeuroTools http://neuralensemble.org/NeuroTools/
+
   - Clone the repository and install anaconda
   - Find the script you would like to run and open its associated \*_\_config.py*_ in a text editor
   - Edit the parameters of the Options object
