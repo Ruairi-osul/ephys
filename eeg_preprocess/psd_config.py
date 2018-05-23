@@ -30,11 +30,12 @@ Change the following parameters in the Options instantiation:
 '''
 
 
-ops = Options(source_folder=r'D:\CIT_WAY\good_eegchans',
+ops = Options(source_folder=r'C:\Users\Rory\raw_data\CIT_WAY\good_eegchans',
               recordings_to_extract=[
-                  'CIT_WAY_02_2018-05-03_13-38-41_PRE'
+                  'CIT_WAY_1_2018-05-01_15-59-19_PRE'
               ],
-              out_folder=r'D:\CIT_WAY\dfs\pds',
+              out_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dfs\pds',
+              eeg_numpy_folder=r'C:\Users\Rory\raw_data\CIT_WAY\eeg_numpy',
               fs=30000.0,
               low_cutoff_lpf=100,
               order_lpf=5,
@@ -43,6 +44,7 @@ ops = Options(source_folder=r'D:\CIT_WAY\good_eegchans',
               operating_system='win',
               noverlap=0,
               downsample_method='decimate',
+              lpf=False,
               spectrum_method='default',
               verbose=True
               )
