@@ -38,7 +38,7 @@ cambridge_chan_map = [22, 17, 28, 25, 29, 26, 20, 23,
 
 ops = Options(recordings_to_pack=['CIT_WAY_05_2018-05-20_16-16-49_PRE',
                                   'CIT_WAY_05_2018-05-20_17-17-39_CIT'],
-              openephys_folder=r'C:\Users\Rory\raw_data\CIT_WAY',
+              openephys_folder=r'E:\SERT_DREADD\dat_files\Combined_binary_files_probe',
               dat_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files',
               chan_map=cambridge_chan_map,
               ref_method='ave',
