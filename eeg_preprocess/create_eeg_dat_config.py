@@ -31,17 +31,20 @@ ROS 2018
 
 '''
 
-eeg_chan_nums = [43, 44, 45,
+eeg_chan_nums = [33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
                  46, 47, 48]
 
-ops = Options(recordings_to_pack=['401b_2018-04-16_14-25-14_NO_CNO',
-                                  '401c_2018-04-17_13-35-07_NO_CNO',
-                                  'unknown_2018-04-12_14-00-40_NO_CNO'],
-              openephys_folder=r'C:\Users\Rory\raw_data\SERT_DREADD\continuous',
-              dat_folder=r'C:\Users\Rory\raw_data\SERT_DREADD\dat_files\eeg',
+ops = Options(recordings_to_pack=['CIT_WAY_04_2018-05-17_14-30-50_PRE',
+                                  'CIT_WAY_05_2018-05-20_16-16-49_PRE',
+                                  'CIT_WAY_05_2018-05-20_17-17-39_CIT',
+                                  'test_2018-05-17_13-50-28_occ',
+                                  'test_2018-05-17_13-54-49_occ_fl'],
+              openephys_folder=r'C:\Users\Rory\raw_data\CIT_WAY\continuous',
+              dat_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files\eeg',
               operating_system='win',
               chan_map=eeg_chan_nums,
-              ref_method=''
+              ref_method='',
+              verbose=True
               )
 
 

@@ -15,7 +15,7 @@ Parameters to change:
     recordings_to_extract    = list of recordings recordings
                                ** must be a list - even if a list of one recording
     kilosort_folder          = parent folder for dirs in which kilosort files are stored
-    experiment               = 'CNO' or 'CIT'
+    experiment               = 'DREADD' or 'CIT'
                                 determines how to label the condition column of spikes_df
     spikes_df_csv_out_folder = root folder in which spikes_df csv files will be saved
     nrn_char_out_fol         = root folder in which neuron_characteristics csv files will be saved
@@ -26,11 +26,14 @@ Parameters to change:
     operating_system         = 'win' if windows, otherwise 'unix'
 '''
 
-ops = Options(recordings_to_extract=['2018-05-01_01', '2018-05-07_03'],
-              experiment='CIT',
-              kilosort_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files\cat',
-              spikes_df_csv_out_folder=r'C:\Users\Rory\raw_data\CIT_WAY\spikes_df',
-              nrn_char_out_fol=r'C:\Users\Rory\raw_data\CIT_WAY\neuron_characteristics',
+ops = Options(recordings_to_extract=['2018-04-10_391b', '2018-04-11_371a',
+                                     '2018-04-12_371b', '2018-04-16_401b',
+                                     '2018-04-17_401c', '2018-04-18_40.1a',
+                                     '2018-04-18_391a'],
+              experiment='DREADD',
+              kilosort_folder=r'E:\SERT_DREADD\dat_files\Combined_binary_files_probe',
+              spikes_df_csv_out_folder=r'E:\SERT_DREADD\dfs\spikes_df',
+              nrn_char_out_fol=r'E:\SERT_DREADD\dfs\neuron_characteristics',
               sampling_rate=30000,
               chars_condition='Baseline',
               verbose=True,
