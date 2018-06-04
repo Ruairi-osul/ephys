@@ -108,7 +108,8 @@ def create_good_spikes_df(data, good_cluster_numbers,
 
     df.to_csv(return_path(path_to_data=spikes_df_csv_out_folder,
                           recording=recording,
-                          sep=sep))
+                          sep=sep),
+              index=False)
     return df
 
 
