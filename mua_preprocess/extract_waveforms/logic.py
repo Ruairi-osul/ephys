@@ -34,17 +34,18 @@ def main(ops):
                                         cluster=cluster,
                                         recording=recording,
                                         num_samples=ops.num_samples,
-                                        thresh=0.10,
+                                        thresh=ops.thresh_udu,
                                         fig_folder=ops.fig_folder,
-                                        fs=30000)
+                                        fs=ops.fs)
             else:
                 cluster_df = down_up(df=df,
                                      num_samples=ops.num_samples,
                                      recording=recording,
                                      cluster=cluster,
+                                     thresh=ops.thesh_du,
                                      fig_folder=ops.fig_folder,
                                      chan=chan,
-                                     fs=30000)
+                                     fs=ops.fs)
             df_list.append(cluster_df)
             plot_waveform(all_chans_df=waveform_per_chan,
                           one_chan_df=one_channel,
@@ -54,5 +55,6 @@ def main(ops):
                           fig_folder=ops.fig_folder)
         df_merged = merge_dfs(df_list, broadcast=True, recording=recording)
         df_list_2.append(df_merged)
+        print(len(df_list_2))
     final_df = merge_dfs(df_list_2, broadcast=False)
-    final_df.to_csv(index=False)
+    final_df.to_csv(''.join([ops.csv_out_folder, 'waveforms.csv']), index=False)

@@ -73,9 +73,11 @@ def choose_channel(df, method, broken_chans):
     if method.lower() == 'max':
         chan = df.apply(np.max, axis=0)
         selected_chan = df.loc[:, chan.idxmax()]
+        chan = chan.idxmax()
     elif method.lower() == 'min':
         chan = df.apply(np.min, axis=0)
         selected_chan = df.loc[:, chan.idxmin()]
+        chan = chan.idxmin()
     else:
         raise ValueError('Unable to parse channel selection method.\nEnter \'min\' or\'max\'')
 
@@ -84,6 +86,7 @@ def choose_channel(df, method, broken_chans):
 
 def gen_peak_finding_df(chan_df):
     df = pd.DataFrame({'y_values': chan_df})
+    df['y_values'] = df['y_values'].rolling(5).mean()
     df['diff'] = df.diff(periods=1)
     df['change'] = (df['diff'] >= 0).map({True: 'increase', False: 'decrease'})
     return df
@@ -116,20 +119,29 @@ def find_baseline_return(df, baseline_amp, min_sample):
     return increasing.iloc[-1].name, increasing.iloc[-1]['y_values']
 
 
-def up_down_up(df, fig_folder, cluster, recording, num_samples, thresh=0.1, fs=30000):
-    half_samples = int(num_samples / 2)
+def find_baseline_up_down_up(df, num_samples, thresh):
+    '''
+    Function to find baseline for up-down-up
+    '''
+    from_start_to_max = np.arange(1, df['y_values'].iloc[:int(num_samples / 2)].idxmax() + 1, 1)
+    for time_point in from_start_to_max:
+        if np.absolute(df.loc[time_point + 1][0] - df.loc[time_point - 1][0]) > thresh and df.loc[time_point]['change'] == 'increase':
+            return time_point
 
+
+def up_down_up(df, fig_folder, cluster, recording, num_samples, thresh=10, fs=30000):
+
+    half_samples = int(num_samples / 2)
     peak_amp = df['y_values'].iloc[:half_samples].max()
     peak_sample = df['y_values'].iloc[:half_samples].idxmax()
 
     min_amp = df['y_values'].min()
     min_sample = df['y_values'].idxmin()
 
-    baseline_amp = peak_amp * thresh
-    baseline_sample = df.loc[(df['y_values'] < peak_amp)
-                             & (df.index < peak_sample)
-                             & (df['change'] == 'increase')
-                             & (df['y_values'] >= baseline_amp), 'y_values'].idxmin()
+    baseline_amp = peak_amp * 0.05
+    baseline_sample = find_baseline_up_down_up(df=df,
+                                               num_samples=num_samples,
+                                               thresh=thresh)
     return_sample, return_amp = find_baseline_return(df, baseline_amp, min_sample)
 
     SWs = calculate_spikewidth(spike_type='up_down_up',
@@ -147,15 +159,23 @@ def up_down_up(df, fig_folder, cluster, recording, num_samples, thresh=0.1, fs=3
     return pd.DataFrame(SWs, index=[0])
 
 
-def down_up(df, fig_folder, num_samples, recording, cluster, chan, fs=30000):
+def find_baseline_down_up(df, thresh):
+    '''
+    Same as standard baseline except the value is the first point where there's a significant y-value DECREASE
+    '''
+
+    from_start_to_min = np.arange(1, df['y_values'].idxmin() + 1, 1)
+    for time_point_for_down_up in from_start_to_min:
+        if (np.absolute(df.loc[time_point_for_down_up + 1][0] - df.loc[time_point_for_down_up - 1][0]) > thresh) and (df.loc[time_point_for_down_up]['change'] == 'decrease'):
+            return time_point_for_down_up
+
+
+def down_up(df, fig_folder, num_samples, recording, cluster, thresh, chan, fs=30000):
     min_amp = df['y_values'].min()
     min_sample = df['y_values'].idxmin()
 
     baseline_amp = np.mean(df['y_values'].iloc[:int(num_samples / 2)])
-    baseline_sample = df.loc[(df['y_values'] > min_amp)
-                             & (df['y_values'] < baseline_amp)
-                             & (df.index < min_sample)
-                             & (df['change'] == 'decrease'), 'y_values'].idxmax()
+    baseline_sample = find_baseline_down_up(df, thresh)
     return_sample, return_amp = find_baseline_return(df, baseline_amp, min_sample)
 
     SWs = calculate_spikewidth(spike_type='down_up',
