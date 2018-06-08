@@ -15,7 +15,7 @@ ROS 2018
 
 ops = Options(kilosort_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files\cat',
               recordings_to_analyse=['2018-05-01_01'],
-              csv_out_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dfs\spike_width',
+              csv_out_folder=r'C:\Users\Rory\raw_data\CIT_WAY\temp',
               spike_selection_method='min',
               num_spikes=1100,
               num_channels=32,

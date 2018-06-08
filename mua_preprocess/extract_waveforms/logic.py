@@ -57,4 +57,4 @@ def main(ops):
         df_list_2.append(df_merged)
         print(len(df_list_2))
     final_df = merge_dfs(df_list_2, broadcast=False)
-    final_df.to_csv(''.join([ops.csv_out_folder, 'waveforms.csv']), index=False)
+    final_df.to_csv(os.path.join(ops.csv_out_folder, 'waveforms.csv'), index=False)
