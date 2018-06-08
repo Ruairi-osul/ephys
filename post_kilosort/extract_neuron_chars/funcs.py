@@ -110,7 +110,6 @@ def create_good_spikes_df(data, good_cluster_numbers,
                           recording=recording,
                           sep=sep),
               index=False)
-    return df
 
 
 def return_path(path_to_data, recording, sep):

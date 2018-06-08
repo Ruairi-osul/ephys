@@ -38,6 +38,7 @@ def main(ops):
         plot_cluster(dfs=[mean_firing_rates_ts, cv_isis_ts],
                      max_time=max_time,
                      df_base=df_ts,
+                     recording=recording,
                      experiment=ops.experiment,
                      medians=[df_stats['Firing Rate'], df_stats['CV ISI']],
                      labs=['Firing Rate [Hz]', 'CV-ISI'],

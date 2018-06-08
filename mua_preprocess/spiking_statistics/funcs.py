@@ -32,8 +32,9 @@ def create_time_series(df):
 def get_condition_times(df, experiment):
     if experiment == 'DREADD':
         max_time = df[df['condition'] == 'CNO']['time'].iloc[-1].total_seconds()
+        max_time = list(zip(['CNO'], [max_time]))
         n_conditions = 1
-    if experiment == 'CIT':
+    elif experiment == 'CIT':
         max_time_cit = df[df['condition'] == 'CIT']['time'].iloc[-1].total_seconds()
         if 'WAY' in df['condition'].values:
             max_time_way = df[df['condition'] == 'WAY']['time'].iloc[-1].total_seconds()
@@ -94,7 +95,7 @@ def get_medians(df, lab):
     return df
 
 
-def plot_cluster(dfs, max_time, experiment, df_base, fig_folder, medians, n_conditions, labs=['Firing Rate', 'CV-ISI']):
+def plot_cluster(dfs, max_time, experiment, df_base, recording, fig_folder, medians, n_conditions, labs=['Firing Rate', 'CV-ISI']):
     num_mins = np.int(max_time / 60)
 
     if experiment == 'CIT':
@@ -153,7 +154,9 @@ def plot_cluster(dfs, max_time, experiment, df_base, fig_folder, medians, n_cond
         a[2].set_xlim([0, 3.5])
         a[2].set_xlabel('Time [Seconds]')
         plt.tight_layout()
-        plt.savefig(''.join([os.path.join(fig_folder, str(col)), '.png']))
+        path = os.path.join(fig_folder, recording)
+        mkdirs_(path)
+        plt.savefig(''.join([os.path.join(fig_folder, recording, str(col)), '.png']))
         plt.close()
 
 

@@ -16,4 +16,4 @@ df = pd.merge(left=left, right=right, left_on=['spike_cluster', 'recording'], ri
 df.drop('cluster', axis=1, inplace=True)
 
 path_out = os.path.join(out_folder, 'neuron_stats.csv')
-df.to_csv(path_out, index=Fal)
+df.to_csv(path_out, index=False)

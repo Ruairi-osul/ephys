@@ -15,13 +15,12 @@ ROS 2018
 
 ops = Options(kilosort_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files\cat',
               recordings_to_analyse=['2018-05-01_01'],
-              csv_out_folder=r'C:\Users\Rory\raw_data\CIT_WAY\temp',
+              temp_folder=r'C:\Users\Rory\raw_data\CIT_WAY\temp',
               spike_selection_method='min',
               num_spikes=1100,
               num_channels=32,
               num_samples=240,
-              fig_folder=r'C:\Users\Rory\raw_data\CIT_WAY\figures',
-              temp_folder=r'C:\Users\Rory\raw_data\CIT_WAY\temp',
+              fig_folder=r'C:\Users\Rory\raw_data\CIT_WAY\figures', ,
               last_spikes=False,
               thresh_udu=12,
               thresh_du=10,
@@ -31,4 +30,4 @@ ops = Options(kilosort_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files\cat',
               verbose=True)
 
 if __name__ == '__main__':
-  main(ops)
+    main(ops)

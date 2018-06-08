@@ -38,6 +38,8 @@ def gen_good_spikes_df(spike_times, spike_clusters, good_cluster_numbers):
 
 
 def gen_spiketimes_series(good_spikes_df, cluster, num_spikes, last_spikes):
+    if len(good_spikes_df) < num_spikes:
+        num_spikes = len(good_spikes_df)
     if last_spikes:
         spike_times = good_spikes_df[good_spikes_df['spike_cluster'] == cluster].iloc[-num_spikes:]
     else:
