@@ -49,6 +49,7 @@ def main(ops):
             df_list.append(cluster_df)
             plot_waveform(all_chans_df=waveform_per_chan,
                           one_chan_df=one_channel,
+                          recording=recording,
                           method=ops.spike_selection_method,
                           chan=chan,
                           cluster=cluster,

@@ -13,19 +13,20 @@ ROS 2018
 '''
 
 
-ops = Options(kilosort_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files\cat',
-              recordings_to_analyse=['2018-05-01_01'],
-              temp_folder=r'C:\Users\Rory\raw_data\CIT_WAY\temp',
+ops = Options(kilosort_folder=r'E:\SERT_DREADD\dat_files\Combined_binary_files_probe',
+              recordings_to_analyse=['2018-04-10_391b', '2018-04-11_371a',
+                                     '2018-04-12_371b', '2018-04-16_401b',
+                                     '2018-04-17_401c', '2018-04-18_40.1a'],
+              temp_folder=r'E:\SERT_DREADD\temp',
               spike_selection_method='min',
               num_spikes=1100,
               num_channels=32,
               num_samples=240,
-              fig_folder=r'C:\Users\Rory\raw_data\CIT_WAY\figures', ,
+              fig_folder=r'E:\SERT_DREADD\figures\waveforms',
               last_spikes=False,
               thresh_udu=12,
               thresh_du=10,
-              borken_channels=[7, 22],
-              sw_out_dir=r'C:\Users\Rory\raw_data\CIT_WAY\dfs\spike_width',
+              borken_channels=[22],
               fs=30000,
               verbose=True)
 
