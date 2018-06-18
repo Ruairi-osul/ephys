@@ -24,12 +24,9 @@ Parameters to change:
 '''
 
 
-ops = Options(recordings_to_analyse=['2018-04-10_391b', '2018-04-11_371a',
-                                     '2018-04-12_371b', '2018-04-16_401b',
-                                     '2018-04-17_401c', '2018-04-18_40.1a',
-                                     '2018-04-18_391a'],
-              data_dir=r'E:\SERT_DREADD\dfs\spikes_df',
-              fig_dir=r'E:\SERT_DREADD\figures',
+ops = Options(recordings_to_analyse=['neuron_stats'],
+              data_dir=r'/Users/sharplab/tran/',
+              fig_dir=r'/Users/sharplab/tran/',
               condition='Baseline',
               method='zscore',
               dpi=300,
@@ -38,7 +35,7 @@ ops = Options(recordings_to_analyse=['2018-04-10_391b', '2018-04-11_371a',
               verbose=True,
               resample_period='60sec',
               rolling=200,
-              operating_system='win')
+              operating_system='unix')
 
 if __name__ == '__main__':
-    main(ops)
+  main(ops)
