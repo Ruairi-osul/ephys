@@ -39,4 +39,4 @@ ops = Options(recordings_to_extract=['2018-04-10_391b', '2018-04-11_371a',
               )
 
 if __name__ == '__main__':
-  main(ops)
+    main(ops)

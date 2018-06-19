@@ -105,7 +105,7 @@ def create_good_spikes_df(data, good_cluster_numbers,
     df['time'] = df['spike_time'].divide(sampling_rate)
     df = df.drop('spike_time', axis=1)
     df = add_condition(df=df, experiment=experiment)
-
+    df['recording'] = recording
     df.to_csv(return_path(path_to_data=spikes_df_csv_out_folder,
                           recording=recording,
                           sep=sep),
