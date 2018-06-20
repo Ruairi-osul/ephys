@@ -40,7 +40,7 @@ def create_ts(df, rolling, resample_period):
     Paramerters:
         df               = pandas DataFrame
         rolling          = integer: rolling window over which mean will be calculated. Defaults to None.
-        resample_period  = size of time bin
+        resample_period  = size of time bin string!!!
     Returns:
         pandas DataFrame
     '''
@@ -48,7 +48,7 @@ def create_ts(df, rolling, resample_period):
                         columns='spike_cluster',
                         values='spike',
                         aggfunc='count')
-    df = df.resample('s').count()
+    df = df.resample(resample_period).count()
     if rolling:
         df = df.rolling(rolling).mean()
     return df
