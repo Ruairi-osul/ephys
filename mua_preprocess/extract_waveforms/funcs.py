@@ -233,7 +233,7 @@ def plot_points(*args, df, cluster, fig_folder):
         a.set_title('cluster:\t {}'.format(str(cluster)))
     if not os.path.exists(os.path.join(fig_folder, 'spike_widths')):
         os.mkdir(os.path.join(fig_folder, 'spike_widths'))
-    plt.savefig(os.path.join(fig_folder, 'spike_widths') + str(cluster) + '.png')
+    plt.savefig(os.path.join(fig_folder, 'spike_widths', str(cluster)) + '.png')
     plt.close()
 
 
@@ -253,5 +253,5 @@ def plot_waveform(all_chans_df, recording, one_chan_df, method, chan, cluster, f
     one_chan_df.plot(ax=a[2], title='Cluster number {clus}:\t{chan}'.format(clus=str(cluster), chan=chan))
     if not os.path.exists(os.path.join(fig_folder, 'waveforms')):
         os.mkdir(os.path.join(fig_folder, 'waveforms'))
-    plt.savefig('_'.join([os.path.join(fig_folder, 'waveforms'), str(recording), str(cluster)]) + '.png')
+    plt.savefig('_'.join([os.path.join(fig_folder, 'waveforms', str(recording)), str(cluster)]) + '.png')
     plt.close()

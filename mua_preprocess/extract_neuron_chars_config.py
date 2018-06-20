@@ -26,12 +26,10 @@ Parameters to change:
     operating_system         = 'win' if windows, otherwise 'unix'
 '''
 
-ops = Options(recordings_to_extract=['2018-04-10_391b', '2018-04-11_371a',
-                                     '2018-04-12_371b', '2018-04-16_401b',
-                                     '2018-04-17_401c', '2018-04-18_40.1a'],
-              experiment='DREADD',
-              kilosort_folder=r'E:\SERT_DREADD\dat_files\Combined_binary_files_probe',
-              spikes_df_csv_out_folder=r'E:\SERT_DREADD\csvs\spikes_time_series',
+ops = Options(recordings_to_extract=['2018-05-01_01'],
+              experiment='CIT',
+              kilosort_folder=r'E:\CIT_WAY\dat_files\cat',
+              spikes_df_csv_out_folder=r'E:\csvs\spikes_time_series',
               sampling_rate=30000,
               chars_condition='Baseline',
               verbose=True,
@@ -39,4 +37,4 @@ ops = Options(recordings_to_extract=['2018-04-10_391b', '2018-04-11_371a',
               )
 
 if __name__ == '__main__':
-    main(ops)
+  main(ops)

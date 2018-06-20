@@ -63,10 +63,7 @@ def select_neruon_cat(ts_df, df_all_neurons, recording, category_column, categor
 def plot_heatmap_separate_categories(ts_df, df_all_neurons, recording, category_column, vmin, vmax, normalise_method, out_folder):
 
     num_categories = len(df_all_neurons['category'].unique())
-    if num_categories % 2 == 0:
-        f, a = plt.subplots(nrows=int(num_categories / 2), ncols=2, figsize=(19, 9))
-    else:
-        f, a = plt.subplots(nrows=int(num_categories / 2) + 1, ncols=2, figsize=(19, 9))
+    f, a = plt.subplots(nrows=num_categories, ncols=1, figsize=(19, 25))
 
     for index, category in enumerate(df_all_neurons[category_column].unique()):
         df_cat = select_neruon_cat(ts_df=ts_df,
