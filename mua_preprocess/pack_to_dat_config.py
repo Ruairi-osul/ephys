@@ -1,5 +1,5 @@
-from mua_pack_to_dat.classes import Options
-from mua_pack_to_dat.pack_continuous_logic import main
+from pack_to_dat.classes import Options
+from pack_to_dat.pack_continuous_logic import main
 '''
 
 This script converts many .continuous files to one .dat file
@@ -36,9 +36,12 @@ cambridge_chan_map = [22, 17, 28, 25, 29, 26, 20, 23,
                       6, 1, 12, 9, 13, 10, 4, 7, 5, 11,
                       15, 2, 14, 3, 8, 16]
 
-ops = Options(recordings_to_pack=['CIT_WAY_05_2018-05-20_16-16-49_PRE',
-                                  'CIT_WAY_05_2018-05-20_17-17-39_CIT'],
-              openephys_folder=r'E:\SERT_DREADD\dat_files\Combined_binary_files_probe',
+ops = Options(recordings_to_pack=['CIT_06_2018-06-13_14-29-45_PRE',
+                                  'CIT_06_2018-06-13_15-31-11_CIT',
+                                  'CIT_06_2018-06-13_16-32-48_WAY',
+                                  'CIT_07_2018-06-14_15-03-20_PRE',
+                                  'CIT_07_2018-06-14_16-04-02_CIT'],
+              openephys_folder=r'C:\Users\Rory\raw_data\CIT_WAY\continuous',
               dat_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files',
               chan_map=cambridge_chan_map,
               ref_method='ave',

@@ -1,8 +1,8 @@
 
 # coding: utf-8
 
-from mua_pack_to_dat.OpenEphys import pack_2
-from mua_pack_to_dat.funcs import gen_paths
+from pack_to_dat.OpenEphys import pack_2
+from pack_to_dat.funcs import gen_paths
 
 '''
 logic for mua_pack_to_dat
