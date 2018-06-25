@@ -125,7 +125,7 @@ def spike_highlight(spike, extracted_spikes, data, chosen_channel):
 
 
 def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster):
-    figpath = os.path.join(kilosort_folder, recording, recording + '.png')
+    figpath = os.path.join(kilosort_folder, recording, recording + ' Cluster no.' + str(chosen_cluster) + '.png')
     plt.ylim(-2000, 2000)
     plt.tick_params(axis='both', which='major', labelsize=20)
     plt.xlabel('time (s)', fontsize=28)
