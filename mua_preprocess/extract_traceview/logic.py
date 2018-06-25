@@ -10,7 +10,7 @@ def main(ops):
 
     Spike_chosen = choosing_spike(extracted_spikes=extracted_spikes, time_chosen=ops.time_chosen)
 
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(35, 30))
 
     chosen_channel = choose_channel(Spike_chosen=Spike_chosen, extracted_spikes=extracted_spikes, time_span=ops.time_span, data=data, broken_chans=ops.broken_chans, num_spikes_for_averaging=ops.num_spikes_for_averaging)
 
@@ -20,9 +20,11 @@ def main(ops):
 
     plt.plot(df_trace['time'], df_trace['Value'], color='gray')
 
-    for spike in np.arange(Spike_chosen - 2, Spike_chosen + 3):
+    highlighted_spike_list = extract_highlighted_spikes(time_span=ops.time_span, extracted_spikes=extracted_spikes, Spike_chosen=Spike_chosen)
+
+    for spike in highlighted_spike_list:
 
         df_highlight = spike_highlight(spike=spike, extracted_spikes=extracted_spikes, data=data, chosen_channel=chosen_channel)
         plt.plot(df_highlight['time'], df_highlight['Value'], color='b')
 
-    plot_final_data(kilosort_folder=ops.kilosort_folder, recording=ops.recording)
+    plot_final_data(kilosort_folder=ops.kilosort_folder, recording=ops.recording, chosen_channel=chosen_channel, chosen_cluster=ops.chosen_cluster)

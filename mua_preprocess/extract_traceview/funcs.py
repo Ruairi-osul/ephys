@@ -68,6 +68,15 @@ def create_trace_parameters(time_span, extracted_spikes, Spike_chosen):
     return start_index, end_index
 
 
+def extract_highlighted_spikes(time_span, extracted_spikes, Spike_chosen):
+    num_samples_in_trace = time_span * 30000
+    waveform_window = np.arange(int(-num_samples_in_trace / 2), int(num_samples_in_trace / 2))
+    start_index = int(extracted_spikes.iloc[Spike_chosen] + waveform_window[0])
+    end_index = int((extracted_spikes.iloc[Spike_chosen] + waveform_window[-1]) + 1)
+    highlighted_spike_list = extracted_spikes[(start_index <= extracted_spikes) & (extracted_spikes <= end_index)]
+    return highlighted_spike_list
+
+
 def create_3D_matrix(num_spikes_for_averaging, extracted_spikes, data):
     threeD_matrix = np.zeros((num_spikes_for_averaging, 60, 32))
     waveform_window = np.arange(-30, 30)
@@ -106,8 +115,8 @@ def choose_channel(Spike_chosen, extracted_spikes, time_span, data, broken_chans
 
 def spike_highlight(spike, extracted_spikes, data, chosen_channel):
     window_for_highlight = np.arange(-60, 60)
-    start_highlight = int(extracted_spikes.iloc[spike] + window_for_highlight[0])
-    end_highlight = int((extracted_spikes.iloc[spike] + window_for_highlight[-1]) + 1)
+    start_highlight = int(spike + window_for_highlight[0])
+    end_highlight = int((spike + window_for_highlight[-1]) + 1)
     filtered_highlight_data = apply_filter(array=data[start_highlight:end_highlight, chosen_channel], low=400, high=6000, fs=30000, order=4)
     df_highlight = pd.DataFrame({'Value': filtered_highlight_data})
     df_highlight['time'] = np.arange(start_highlight, end_highlight, 1)
@@ -115,12 +124,13 @@ def spike_highlight(spike, extracted_spikes, data, chosen_channel):
     return df_highlight_final
 
 
-def plot_final_data(kilosort_folder, recording):
+def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster):
     figpath = os.path.join(kilosort_folder, recording, recording + '.png')
     plt.ylim(-2000, 2000)
     plt.tick_params(axis='both', which='major', labelsize=20)
     plt.xlabel('time (s)', fontsize=28)
     plt.ylabel('amplitude', fontsize=28)
+    plt.title('Recording: {0} \n Channel: {1} \n Cluster: {2}' .format(recording, chosen_channel, chosen_cluster), fontsize=28)
     plt.savefig(figpath)
 
 
@@ -128,5 +138,5 @@ def choose_cluster_to_plot(cluster_groups, spike_clusters, spike_times, chosen_c
     good_cluster_numbers = get_good_cluster_numbers(cluster_groups)
     df = pd.DataFrame({'cluster': spike_clusters.flatten(), 'spike_times': spike_times.flatten()})
     df = df.loc[df['cluster'].isin(good_cluster_numbers)]
-    cluster_to_plot = good_cluster_numbers[chosen_cluster]
+    cluster_to_plot = good_cluster_numbers[good_cluster_numbers == chosen_cluster][0]
     return df, cluster_to_plot
