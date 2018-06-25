@@ -1,8 +1,6 @@
 import os
 import numpy as np
 import pandas as pd
-import array
-import mmap
 import matplotlib.pyplot as plt
 from scipy.signal import butter, lfilter, freqz
 from scipy import signal as ss
