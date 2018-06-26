@@ -28,8 +28,8 @@ Parameters to change:
 
 ops = Options(recordings_to_extract=['2018-05-01_01'],
               experiment='CIT',
-              kilosort_folder=r'E:\CIT_WAY\dat_files\cat',
-              spikes_df_csv_out_folder=r'E:\csvs\spikes_time_series',
+              kilosort_folder=r'F:\CIT_WAY',
+              spikes_df_csv_out_folder=r'F:\CIT_WAY\spikes_time_series',
               sampling_rate=30000,
               chars_condition='Baseline',
               verbose=True,

@@ -50,4 +50,4 @@ def main(ops):
     plot_final_data(kilosort_folder=ops.kilosort_folder,
                     recording=ops.recording,
                     chosen_channel=chosen_channel,
-                    chosen_cluster=ops.chosen_cluster)
+                    chosen_cluster=ops.chosen_cluster, highlighted_spike_list = highlighted_spike_list, time_chosen=ops.time_chosen)

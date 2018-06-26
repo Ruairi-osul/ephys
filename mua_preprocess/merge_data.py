@@ -2,8 +2,8 @@ import pandas as pd
 from glob import glob
 import os
 
-path_to_temp = r'E:\CIT_WAY\csvs\temp'
-out_folder = r'E:\CIT_WAY\csvs'
+path_to_temp = r'F:\CIT_WAY\csvs\temp'
+out_folder = r'F:\CIT_WAY\csvs'
 
 for file in glob(os.path.join(path_to_temp, '*.csv')):
     df = pd.read_csv(file)

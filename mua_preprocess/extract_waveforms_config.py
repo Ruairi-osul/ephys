@@ -13,18 +13,18 @@ ROS 2018
 '''
 
 
-ops = Options(kilosort_folder=r'E:\CIT_WAY\dat_files\cat',
+ops = Options(kilosort_folder=r'F:\CIT_WAY',
               recordings_to_analyse=['2018-05-01_01'],
-              temp_folder=r'E:\CIT_WAY\csvs\temp',
+              temp_folder=r'F:\CIT_WAY\csvs\temp',
               spike_selection_method='min',
               num_spikes=1100,
               num_channels=32,
               num_samples=240,
-              fig_folder=r'E:\CIT_WAY\figures\waveforms',
+              fig_folder=r'F:\CIT_WAY\figures',
               last_spikes=False,
               thresh_udu=12,
               thresh_du=10,
-              borken_channels=[],
+              borken_channels=[22],
               fs=30000,
               verbose=True)
 

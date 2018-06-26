@@ -122,13 +122,14 @@ def spike_highlight(spike, extracted_spikes, data, chosen_channel):
     return df_highlight_final
 
 
-def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster):
+def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster, highlighted_spike_list, time_chosen):
     figpath = os.path.join(kilosort_folder, recording, recording + ' Cluster no.' + str(chosen_cluster) + '.png')
     plt.ylim(-2000, 2000)
     plt.tick_params(axis='both', which='major', labelsize=20)
     plt.xlabel('time (s)', fontsize=28)
     plt.ylabel('amplitude', fontsize=28)
     plt.title('Recording: {0} \n Channel: {1} \n Cluster: {2}' .format(recording, chosen_channel, chosen_cluster), fontsize=28)
+    plt.annotate('no. of spikes: {}'.format(len(highlighted_spike_list)), xy=(time_chosen, 1500), xytext=(time_chosen, 1500), size=30)
     plt.savefig(figpath)
 
 
