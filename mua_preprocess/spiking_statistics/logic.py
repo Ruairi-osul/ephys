@@ -13,6 +13,7 @@ def main(ops):
             max_time = max_times[0][1]
         elif n_conditions == 2:
             max_time = max_times[1][1]
+
         # baseline_stats
         df_base = df[df['condition'] == 'Baseline']
         df_ts = create_time_series(df_base)
