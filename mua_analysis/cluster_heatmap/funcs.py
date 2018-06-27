@@ -28,6 +28,24 @@ def create_ts(df, rolling_period, resample_period=1):
         df = df.rolling(rolling_period).mean()
     return df
 
+def calculate_neuron_mfr(col, num_mins_per_bin, total_time):
+    num_bins = np.int(total_time / num_mins_per_bin)
+    col_bins = np.array_split(col, num_bins)
+    mfrs = pd.Series(np.zeros(num_bins))
+
+    for ind, col_bin in enumerate(col_bins):
+        spike_times = pd.to_numeric(col_bin[col_bin.notnull()].index.values)
+        try:
+            spike_train = SpikeTrain(times=spike_times,
+                                     t_stop=spike_times[-1],
+                                     units=ns)
+            mfr = mean_firing_rate(spike_train)
+        except IndexError:
+            mfr = np.nan
+        mfrs[ind] = mfr
+    mfrs *= 10**10
+    return mfrs
+
 
 def get_baseline_stats(df, condition_label, resample_period):
     df = df[df['condition'] == condition_label]

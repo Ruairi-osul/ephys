@@ -66,7 +66,7 @@ def calculate_neuron_cov(col, num_mins_per_bin, total_time):
     return cv_isis
 
 
-def calculate_neuron_mfr(col, num_mins_per_bin, total_time):
+def calculate_neuron_mfr_elephant(col, num_mins_per_bin, total_time):
     num_bins = np.int(total_time / num_mins_per_bin)
     col_bins = np.array_split(col, num_bins)
     mfrs = pd.Series(np.zeros(num_bins))
@@ -83,6 +83,42 @@ def calculate_neuron_mfr(col, num_mins_per_bin, total_time):
         mfrs[ind] = mfr
     mfrs *= 10**10
     return mfrs
+
+
+def make_df_stats(averaging_method, recording, cv_isis_ts,mean_firing_rates_ts):
+    if averaging_method == 'mean':
+        cov_medians = cv_isis_ts.apply(np.nanmean)
+        mfr_medians = mean_firing_rates_ts.apply(np.nanmean)
+
+    elif averaging_method == 'median':
+        cov_medians = cv_isis_ts.apply(np.nanmedian)
+        mfr_medians = mean_firing_rates_ts.apply(np.nanmedian)
+
+    elif averaging_method == 'ruairi_old_median':
+        cov_medians = get_medians(df=cv_isis_ts, lab='CV ISI')
+        mfr_medians = get_medians(df=mean_firing_rates_ts, lab='Firing Rate')
+    
+    df_stats = pd.concat([cov_medians, mfr_medians], axis=1)
+    df_stats.columns = ['CV ISI', 'Firing Rate']
+    df_stats['recording'] = recording
+    return df_stats
+
+
+def calculate_neuron_mfr_numpy(col, num_mins_per_bin, total_time):
+    num_bins = np.int(total_time / num_mins_per_bin)
+    col_bins = np.array_split(col, num_bins)
+    mfrs = pd.Series(np.zeros(num_bins))
+
+    for ind, col_bin in enumerate(col_bins):
+        num_spikes = np.sum(col_bin == 1)
+        if not num_spikes:
+            mfr = 0
+        else:
+            mfr = num_spikes/(num_mins_per_bin*60)
+        mfrs[ind] = mfr
+    mfrs.fillna(0, inplace=True)
+    #mfrs *= 10**10
+    return mfrs  #differrent from stats
 
 
 def get_medians(df, lab):

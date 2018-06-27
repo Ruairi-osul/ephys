@@ -15,6 +15,11 @@ def main(ops):
         df_rec = create_ts(df=df_rec,
                            resample_period=ops.resample_period,
                            rolling_period=ops.rolling_periods)
+
+        df_rec = df_rec.apply(func=calculate_neuron_mfr,
+                                           num_mins_per_bin=2,
+                                           total_time=60)
+
         df_rec = normalise(df=df_rec,
                            method=ops.normalisation_method,
                            condition_means=base_means,

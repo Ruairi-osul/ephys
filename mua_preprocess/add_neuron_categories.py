@@ -35,7 +35,7 @@ def neuron_category_mapper(row):
         rate = 'slow'
     else:
         rate = 'fast'
-    if row['CV ISI'] <= 0.61:
+    if row['CV ISI'] <= 0.45:
         reg = 'regular'
     else:
         reg = 'irregular'

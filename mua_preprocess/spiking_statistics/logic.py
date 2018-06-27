@@ -20,22 +20,34 @@ def main(ops):
         cv_isis_ts = df_ts.apply(func=calculate_neuron_cov,
                                  num_mins_per_bin=2,
                                  total_time=60)
-        mean_firing_rates_ts = df_ts.apply(func=calculate_neuron_mfr,
+
+        if ops.mfr_method == 'elephant':
+            mean_firing_rates_ts = df_ts.apply(func=calculate_neuron_mfr_elephant,
                                            num_mins_per_bin=2,
                                            total_time=60)
-        cov_medians = get_medians(df=cv_isis_ts, lab='CV ISI')
-        mfr_medians = get_medians(df=mean_firing_rates_ts, lab='Firing Rate')
-        df_stats = cov_medians.join(mfr_medians)
-        df_stats['recording'] = recording
+        elif ops.mfr_method == 'numpy':
+            mean_firing_rates_ts = df_ts.apply(func=calculate_neuron_mfr_numpy,
+                                           num_mins_per_bin=2,
+                                           total_time=60)
+
+        df_stats = make_df_stats(averaging_method=ops.averaging_method, recording=recording, cv_isis_ts=cv_isis_ts, mean_firing_rates_ts=mean_firing_rates_ts)
+
 
         # all neurons - calculate firing rate and cv-isi over time then plot
         df_ts_all = create_time_series(df)
         cv_isis_ts = df_ts_all.apply(func=calculate_neuron_cov,
                                      num_mins_per_bin=2,
                                      total_time=np.int(max_time / 60))
-        mean_firing_rates_ts = df_ts_all.apply(func=calculate_neuron_mfr,
-                                               num_mins_per_bin=2,
-                                               total_time=np.int(max_time / 60))
+
+        if ops.mfr_method == 'elephant':
+            mean_firing_rates_ts = df_ts_all.apply(func=calculate_neuron_mfr_elephant,
+                                           num_mins_per_bin=2,
+                                           total_time=60)
+        elif ops.mfr_method == 'numpy':
+            mean_firing_rates_ts = df_ts_all.apply(func=calculate_neuron_mfr_numpy,
+                                           num_mins_per_bin=2,
+                                           total_time=60)
+
         plot_cluster(dfs=[mean_firing_rates_ts, cv_isis_ts],
                      max_time=max_time,
                      df_base=df_ts,
