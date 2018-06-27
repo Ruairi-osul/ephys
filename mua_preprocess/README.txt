@@ -21,4 +21,5 @@ Run scripts in this order:
     merge_data
         merge the two temperary files created by extract_waveforms and spiking_statistics into one file containing all spiking information.
 
-    add+groups
+    add_neuron_categories
+        Flexible scipt to add labels to neuons based on spiking characteristics.
