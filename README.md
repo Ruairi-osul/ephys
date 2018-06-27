@@ -10,7 +10,7 @@ Ruairi O'Sullivan and Tran Tran 2018
 ### Dependencies: 
 Requires libraries associated with an anaconda python install: https://conda.io/docs/user-guide/install/download.html
 
-Some scripts also require the Neo and Elephant libraries http://neuralensemble.org/NeuroTools/
+Some scripts also require the Neo and Elephant libraries: https://neo-python.readthedocs.io/en/latest/   https://elephant.readthedocs.io/en/latest/overview.html
 
 
 ### Steps to run a scipt
