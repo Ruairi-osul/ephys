@@ -123,13 +123,18 @@ def spike_highlight(spike, extracted_spikes, data, chosen_channel):
 
 
 def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster, highlighted_spike_list, time_chosen):
-    figpath = os.path.join(kilosort_folder, recording, recording + ' Cluster no.' + str(chosen_cluster) + '.png')
+    fig_folder =  os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster))
     plt.ylim(-2000, 2000)
     plt.tick_params(axis='both', which='major', labelsize=20)
     plt.xlabel('time (s)', fontsize=28)
     plt.ylabel('amplitude', fontsize=28)
     plt.title('Recording: {0} \n Channel: {1} \n Cluster: {2}' .format(recording, chosen_channel, chosen_cluster), fontsize=28)
     plt.annotate('no. of spikes: {}'.format(len(highlighted_spike_list)), xy=(time_chosen, 1500), xytext=(time_chosen, 1500), size=30)
+    mkdirs_(fig_folder)
+    if time_chosen >= 60*60: 
+        figpath = os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster), recording + ' Cluster no.' + str(chosen_cluster) + ' After.png')
+    else:
+        figpath = os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster), recording + ' Cluster no.' + str(chosen_cluster) + ' Before.png')
     plt.savefig(figpath)
 
 
@@ -139,3 +144,7 @@ def choose_cluster_to_plot(cluster_groups, spike_clusters, spike_times, chosen_c
     df = df.loc[df['cluster'].isin(good_cluster_numbers)]
     cluster_to_plot = good_cluster_numbers[good_cluster_numbers == chosen_cluster][0]
     return df, cluster_to_plot
+
+def mkdirs_(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
