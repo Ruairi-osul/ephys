@@ -12,11 +12,11 @@ experiment = 'CIT' or 'DREADD'
 '''
 
 ops = Options(recordings_to_analyse=['2018-05-01_01'],
-              data_dir=r'E:\CIT_WAY\csvs\spikes_time_series',
+              data_dir=r'F:\CIT_WAY\csvs\spikes_time_series',
               experiment='CIT',
-              temp_folder=r'E:\CIT_WAY\csvs\temp',
-              fig_folder=r'E:\CIT_WAY\figures\cluster_over_time_test',
-              mfr_method = 'elephant',
+              temp_folder=r'F:\CIT_WAY\csvs\temp',
+              fig_folder=r'F:\CIT_WAY\figures\cluster_over_time_test',
+              mfr_method = 'notnull',
               averaging_method = 'mean',
               verbose=True)
 

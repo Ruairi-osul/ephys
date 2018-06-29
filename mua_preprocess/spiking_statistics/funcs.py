@@ -118,7 +118,16 @@ def calculate_neuron_mfr_numpy(col, num_mins_per_bin, total_time):
         mfrs[ind] = mfr
     mfrs.fillna(0, inplace=True)
     #mfrs *= 10**10
-    return mfrs  #differrent from stats
+    return mfrs
+
+def calculate_neuron_mfr_sum_notnull(col, num_mins_per_bin, total_time):
+    num_bins = np.int(total_time / num_mins_per_bin)
+    col_bins = np.array_split(col, num_bins)
+    mfrs = pd.Series(np.zeros(num_bins))
+    for ind, each_bin in enumerate(col_bins):
+        mfr = np.sum(each_bin.notnull())/120
+        mfrs[ind] = mfr
+    return mfrs
 
 
 def get_medians(df, lab):

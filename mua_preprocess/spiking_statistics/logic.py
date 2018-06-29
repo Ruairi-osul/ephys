@@ -29,6 +29,11 @@ def main(ops):
             mean_firing_rates_ts = df_ts.apply(func=calculate_neuron_mfr_numpy,
                                            num_mins_per_bin=2,
                                            total_time=60)
+        elif ops.mfr_method == 'notnull':
+            mean_firing_rates_ts = df_ts.apply(func=calculate_neuron_mfr_sum_notnull,
+                                           num_mins_per_bin=2,
+                                           total_time=60)
+
 
         df_stats = make_df_stats(averaging_method=ops.averaging_method, recording=recording, cv_isis_ts=cv_isis_ts, mean_firing_rates_ts=mean_firing_rates_ts)
 
@@ -42,11 +47,15 @@ def main(ops):
         if ops.mfr_method == 'elephant':
             mean_firing_rates_ts = df_ts_all.apply(func=calculate_neuron_mfr_elephant,
                                            num_mins_per_bin=2,
-                                           total_time=60)
+                                           total_time=np.int(max_time / 60))
         elif ops.mfr_method == 'numpy':
             mean_firing_rates_ts = df_ts_all.apply(func=calculate_neuron_mfr_numpy,
                                            num_mins_per_bin=2,
-                                           total_time=60)
+                                           total_time=np.int(max_time / 60))
+        elif ops.mfr_method == 'notnull':
+            mean_firing_rates_ts = df_ts_all.apply(func=calculate_neuron_mfr_sum_notnull,
+                                           num_mins_per_bin=2,
+                                           total_time=np.int(max_time / 60))
 
         plot_cluster(dfs=[mean_firing_rates_ts, cv_isis_ts],
                      max_time=max_time,
