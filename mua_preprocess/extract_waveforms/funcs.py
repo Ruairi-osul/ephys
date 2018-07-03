@@ -251,7 +251,7 @@ def plot_waveform(all_chans_df, recording, one_chan_df, method, chan, cluster, f
     all_chans_df.iloc[:, :15].plot(ax=a[0], title='All channels: Shank 1')
     all_chans_df.iloc[:, 15:].plot(ax=a[1], title='All channels: Shank 2')
     one_chan_df.plot(ax=a[2], title='Cluster number {clus}:\t{chan}'.format(clus=str(cluster), chan=chan))
-    if not os.path.exists(os.path.join(fig_folder, 'waveforms')):
-        os.mkdir(os.path.join(fig_folder, 'waveforms'))
-    plt.savefig('_'.join([os.path.join(fig_folder, 'waveforms', str(recording)), str(cluster)]) + '.png')
+    if not os.path.exists(os.path.join(fig_folder, 'waveforms', str(recording))):
+        os.mkdir(os.path.join(fig_folder, 'waveforms', str(recording)))
+    plt.savefig('_'.join([os.path.join(fig_folder, 'waveforms', str(recording), str(cluster)),  str(recording)]) + '.png')
     plt.close()
