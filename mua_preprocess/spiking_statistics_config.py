@@ -11,11 +11,11 @@ averaging_method = 'mean', 'median', or 'ruairi_old_median'
 experiment = 'CIT' or 'DREADD'
 '''
 
-ops = Options(recordings_to_analyse=['2018-05-01_01'],
-              data_dir=r'F:\CIT_WAY\csvs\spikes_time_series',
-              experiment='CIT',
-              temp_folder=r'F:\CIT_WAY\csvs\temp',
-              fig_folder=r'F:\CIT_WAY\figures\cluster_over_time_test',
+ops = Options(recordings_to_analyse=['2018-04-18'],
+              data_dir=r'G:\Rawdata\SERT\spikes_time_series',
+              experiment='DREADD',
+              temp_folder=r'G:\Rawdata\SERT\csvs\temp',
+              fig_folder=r'G:\Rawdata\SERT\figures\cluster_over_time',
               mfr_method = 'notnull',
               averaging_method = 'mean',
               verbose=True)

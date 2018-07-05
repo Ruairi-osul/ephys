@@ -76,8 +76,8 @@ def extract_highlighted_spikes(time_span, extracted_spikes, Spike_chosen):
 
 
 def create_3D_matrix(num_spikes_for_averaging, extracted_spikes, data):
-    threeD_matrix = np.zeros((num_spikes_for_averaging, 60, 32))
-    waveform_window = np.arange(-30, 30)
+    threeD_matrix = np.zeros((num_spikes_for_averaging, 240, 32))
+    waveform_window = np.arange(-120, 120)
     for spike in np.arange(0, num_spikes_for_averaging):
         start_index = int(extracted_spikes.iloc[spike] + waveform_window[0])
         end_index = int((extracted_spikes.iloc[spike] + waveform_window[-1]) + 1)
@@ -124,11 +124,11 @@ def spike_highlight(spike, extracted_spikes, data, chosen_channel):
 
 def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster, highlighted_spike_list, time_chosen):
     fig_folder =  os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster))
-    plt.ylim(-2000, 2000)
+    plt.ylim(-900, 900)
     plt.tick_params(axis='both', which='major', labelsize=20)
-    plt.xlabel('time (s)', fontsize=28)
-    plt.ylabel('amplitude', fontsize=28)
-    plt.title('Recording: {0} \n Channel: {1} \n Cluster: {2}' .format(recording, chosen_channel, chosen_cluster), fontsize=28)
+    plt.xlabel('time [s]', fontsize=40)
+    plt.ylabel('voltage [mV]', fontsize=40)
+    plt.title('Recording: {0} \n Channel: {1} \n Cluster: {2}' .format(recording, chosen_channel, chosen_cluster), fontsize=35)
     plt.annotate('no. of spikes: {}'.format(len(highlighted_spike_list)), xy=(time_chosen, 1500), xytext=(time_chosen, 1500), size=30)
     mkdirs_(fig_folder)
     if time_chosen >= 60*60: 

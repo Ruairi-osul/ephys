@@ -34,7 +34,7 @@ def main(ops):
                              data=data,
                              chosen_channel=chosen_channel)
 
-    plt.plot(df_trace['time'], df_trace['Value'], color='gray')
+    plt.plot(df_trace['time'], df_trace['Value'], color='gray', alpha = 0.5)
 
     highlighted_spike_list = extract_highlighted_spikes(time_span=ops.time_span,
                                                         extracted_spikes=extracted_spikes,
@@ -45,7 +45,7 @@ def main(ops):
                                        extracted_spikes=extracted_spikes,
                                        data=data,
                                        chosen_channel=chosen_channel)
-        plt.plot(df_highlight['time'], df_highlight['Value'], color=ops.color)
+        plt.plot(df_highlight['time'], df_highlight['Value'], color=ops.color, linewidth=3)
 
     plot_final_data(kilosort_folder=ops.kilosort_folder,
                     recording=ops.recording,

@@ -13,14 +13,14 @@ ROS 2018
 '''
 
 
-ops = Options(kilosort_folder=r'F:\SERT_DREAD\Combined_binary_files_probe',
-              recordings_to_analyse=['2018-04-10_391b', '2018-04-11_371a', '2018-04-12_371b', '2018-04-16_401b', '2018-04-17_401c', '2018-04-18_40.1a'],
-              temp_folder=r'F:\SERT_DREAD\Combined_binary_files_probe\csvs\temp',
+ops = Options(kilosort_folder=r'G:\Rawdata\SERT',
+              recordings_to_analyse=['2018-04-18'],
+              temp_folder=r'G:\Rawdata\SERT\csvs\temp',
               spike_selection_method='min',
               num_spikes=1100,
               num_channels=32,
               num_samples=240,
-              fig_folder=r'F:\SERT_DREAD\Combined_binary_files_probe\figures',
+              fig_folder=r'G:\Rawdata\SERT\figures',
               last_spikes=False,
               thresh_udu=12,
               thresh_du=10,
