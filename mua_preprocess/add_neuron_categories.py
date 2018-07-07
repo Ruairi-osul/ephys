@@ -2,12 +2,12 @@ import pandas as pd
 import os
 from glob import glob
 
-path_to_neuron_stats = r'F:\CIT_WAY\csvs'
+path_to_neuron_stats = r'G:\Rawdata\SERT\csvs'
 neuron_stats_csv_name = 'neuron_stats'
 
-path_to_ts = r'F:\CIT_WAY\spikes_time_series'
+path_to_ts = r'G:\Rawdata\SERT\spikes_time_series'
 
-file_out_dir = r'F:\CIT_WAY\csvs'
+file_out_dir = r'G:\Rawdata\SERT\csvs'
 file_out_name_ts = 'all_neurons_ts_with_clusters.csv'
 
 
@@ -35,7 +35,7 @@ def neuron_category_mapper(row):
         rate = 'slow'
     else:
         rate = 'fast'
-    if row['CV ISI'] <= 0.45:
+    if row['CV ISI'] <= 0.55:
         reg = 'regular'
     else:
         reg = 'irregular'

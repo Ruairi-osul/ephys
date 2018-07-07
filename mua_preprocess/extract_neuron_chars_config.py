@@ -23,17 +23,15 @@ Parameters to change:
     chars_condition          = condition over which the summary statistics saved in
                                neuron_characteristics will be saved e.g. Baseline
     verbose                  = True or False
-    method                   = 'elephant' or 'numpy'
     operating_system         = 'win' if windows, otherwise 'unix'
 '''
 
-ops = Options(recordings_to_extract=['2018-05-01_01'],
-              experiment='CIT',
-              kilosort_folder=r'F:\CIT_WAY',
-              spikes_df_csv_out_folder=r'F:\CIT_WAY\spikes_time_series',
+ops = Options(recordings_to_extract=['2018-04-18'],
+              experiment='DREADD',
+              kilosort_folder=r'G:\Rawdata\SERT',
+              spikes_df_csv_out_folder=r'G:\Rawdata\SERT\spikes_time_series',
               sampling_rate=30000,
               chars_condition='Baseline',
-              method = 'numpy',
               verbose=True,
               operating_system='win'
               )

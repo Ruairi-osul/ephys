@@ -1,8 +1,5 @@
 TO DO
 
-Script returning waveform given cluster number and recording 
-	Option of color
-	
 Script returning autocorlaogram given cluster number and recording
 	Option of color
 
@@ -13,7 +10,4 @@ Notebook of clustering of neurons given spike statistics
 Notebook to create scatter of firing rate versus regularity
 	Alpha of all neurons low
 	Alpha of selected neuron in each cluster high
-	
-Notebook with updated script for cluster-separated heatmap
-	One colorbar
-	Curly brace indicating group to which each cluster belongs 
+
