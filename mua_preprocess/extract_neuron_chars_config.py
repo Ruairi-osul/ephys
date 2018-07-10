@@ -26,7 +26,7 @@ Parameters to change:
     operating_system         = 'win' if windows, otherwise 'unix'
 '''
 
-ops = Options(recordings_to_extract=['2018-04-18'],
+ops = Options(recordings_to_extract=['2018-04-12_371b', '2018-04-16_401b', '2018-04-17_401c', '2018-04-18'],
               experiment='DREADD',
               kilosort_folder=r'G:\Rawdata\SERT',
               spikes_df_csv_out_folder=r'G:\Rawdata\SERT\spikes_time_series',

@@ -14,7 +14,7 @@ ROS 2018
 
 
 ops = Options(kilosort_folder=r'G:\Rawdata\SERT',
-              recordings_to_analyse=['2018-04-18'],
+              recordings_to_analyse=['2018-04-12_371b', '2018-04-16_401b', '2018-04-17_401c', '2018-04-18'],
               temp_folder=r'G:\Rawdata\SERT\csvs\temp',
               spike_selection_method='min',
               num_spikes=1100,

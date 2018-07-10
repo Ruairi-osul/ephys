@@ -2,6 +2,7 @@ from extract_traceview.funcs import *
 
 
 def main(ops):
+
     data = load_raw_data(kilosort_folder=ops.kilosort_folder,
                          recording=ops.recording,
                          num_channels=ops.num_channels)
@@ -18,7 +19,7 @@ def main(ops):
     extracted_spikes = df[df['cluster'] == cluster_to_plot]['spike_times']
     Spike_chosen = choosing_spike(extracted_spikes=extracted_spikes,
                                   time_chosen=ops.time_chosen)
-    plt.figure(figsize=(35, 30))
+    plt.figure(figsize=(24.5, 10))
     chosen_channel = choose_channel(Spike_chosen=Spike_chosen,
                                     extracted_spikes=extracted_spikes,
                                     time_span=ops.time_span,
@@ -45,7 +46,7 @@ def main(ops):
                                        extracted_spikes=extracted_spikes,
                                        data=data,
                                        chosen_channel=chosen_channel)
-        plt.plot(df_highlight['time'], df_highlight['Value'], color=ops.color, linewidth=3)
+        plt.plot(df_highlight['time'], df_highlight['Value'], color=ops.color, linewidth=2)
 
     plot_final_data(kilosort_folder=ops.kilosort_folder,
                     recording=ops.recording,

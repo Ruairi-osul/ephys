@@ -11,7 +11,7 @@ averaging_method = 'mean', 'median', or 'ruairi_old_median'
 experiment = 'CIT' or 'DREADD'
 '''
 
-ops = Options(recordings_to_analyse=['2018-04-18'],
+ops = Options(recordings_to_analyse=['2018-04-12_371b', '2018-04-16_401b', '2018-04-17_401c', '2018-04-18'],
               data_dir=r'G:\Rawdata\SERT\spikes_time_series',
               experiment='DREADD',
               temp_folder=r'G:\Rawdata\SERT\csvs\temp',

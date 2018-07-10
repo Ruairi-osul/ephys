@@ -112,7 +112,7 @@ def choose_channel(Spike_chosen, extracted_spikes, time_span, data, broken_chans
 
 
 def spike_highlight(spike, extracted_spikes, data, chosen_channel):
-    window_for_highlight = np.arange(-60, 60)
+    window_for_highlight = np.arange(-30, 30)
     start_highlight = int(spike + window_for_highlight[0])
     end_highlight = int((spike + window_for_highlight[-1]) + 1)
     filtered_highlight_data = apply_filter(array=data[start_highlight:end_highlight, chosen_channel], low=400, high=6000, fs=30000, order=4)
@@ -124,17 +124,21 @@ def spike_highlight(spike, extracted_spikes, data, chosen_channel):
 
 def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster, highlighted_spike_list, time_chosen):
     fig_folder =  os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster))
-    plt.ylim(-900, 900)
-    plt.tick_params(axis='both', which='major', labelsize=20)
-    plt.xlabel('time [s]', fontsize=40)
-    plt.ylabel('voltage [mV]', fontsize=40)
-    plt.title('Recording: {0} \n Channel: {1} \n Cluster: {2}' .format(recording, chosen_channel, chosen_cluster), fontsize=35)
+    font = {'fontname':'Calibri'}
+    plt.ylim(-1200, 800)
+    plt.tick_params(axis='both', which='major', labelsize=50)
+    locs, labels = plt.xticks()
+    plt.xticks(np.arange(time_chosen-5, time_chosen+7,2), np.arange(0, 12, 2.0))
+    plt.xlabel('Time [s]', **font, fontsize=70)
+    plt.ylabel('Voltage [µV]', **font, fontsize=70)
+    plt.title('Slow Regular', **font, fontsize=80)
     plt.annotate('no. of spikes: {}'.format(len(highlighted_spike_list)), xy=(time_chosen, 1500), xytext=(time_chosen, 1500), size=30)
     mkdirs_(fig_folder)
     if time_chosen >= 60*60: 
         figpath = os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster), recording + ' Cluster no.' + str(chosen_cluster) + ' After.png')
     else:
         figpath = os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster), recording + ' Cluster no.' + str(chosen_cluster) + ' Before.png')
+    plt.tight_layout()
     plt.savefig(figpath)
 
 
