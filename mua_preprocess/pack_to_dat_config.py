@@ -24,7 +24,7 @@ Change the following parameters:
 
     operating_system = the operating_system on which the sript is being run
                        choose 'win' or 'unix'
-
+our code is located in one file, t
 
 ROS 2018
 
@@ -36,17 +36,25 @@ cambridge_chan_map = [22, 17, 28, 25, 29, 26, 20, 23,
                       6, 1, 12, 9, 13, 10, 4, 7, 5, 11,
                       15, 2, 14, 3, 8, 16]
 
-ops = Options(recordings_to_pack=['CIT_06_2018-06-13_14-29-45_PRE',
-                                  'CIT_06_2018-06-13_15-31-11_CIT',
-                                  'CIT_06_2018-06-13_16-32-48_WAY',
-                                  'CIT_07_2018-06-14_15-03-20_PRE',
-                                  'CIT_07_2018-06-14_16-04-02_CIT'],
-              openephys_folder=r'C:\Users\Rory\raw_data\CIT_WAY\continuous',
-              dat_folder=r'C:\Users\Rory\raw_data\CIT_WAY\dat_files',
+ops = Options(recordings_to_pack=['CIT_09_2018-07-03_11-49-25_PRE',
+                                  'CIT_09_2018-07-03_11-51-35_PRE_02',
+                                  'CIT_09_2018-07-03_12-52-17_CIT',
+                                  'CIT_10_2018-07-04_13-34-26_PRE',
+                                  'CIT_10_2018-07-04_14-35-22_CIT',
+                                  'CIT_10_2018-07-04_15-35-59_WAY',
+                                  'CIT_11_2018-07-05_12-20-03_PRE',
+                                  'CIT_11_2018-07-05_13-20-45_CIT',
+                                  'CIT_11_2018-07-05_14-21-27_WAY',
+                                  'CIT_14_2018-07-06_12-47-26_PRE',
+                                  'CIT_14_2018-07-06_13-49-25_CIT',
+                                  'CIT_14_2018-07-06_14-52-19_WAY'],
+              openephys_folder=r'/media/ruairi/Ephys_back_up_1/CIT_WAY/continuous',
+              dat_folder=r'/media/ruairi/Ephys_back_up_1/CIT_WAY/dat_files',
               chan_map=cambridge_chan_map,
-              ref_method='ave',
-              operating_system='win',
+              ref_method='',
+              operating_system='unix',
               verbose=True)
 
 if __name__ == '__main__':
     main(ops)
+
