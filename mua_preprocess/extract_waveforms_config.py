@@ -13,14 +13,14 @@ ROS 2018
 '''
 
 
-ops = Options(kilosort_folder=r'G:\Rawdata\SERT',
-              recordings_to_analyse=['2018-04-12_371b', '2018-04-16_401b', '2018-04-17_401c', '2018-04-18'],
-              temp_folder=r'G:\Rawdata\SERT\csvs\temp',
+ops = Options(kilosort_folder=r'/home/ruairi/CIT_WAY',
+              recordings_to_analyse=['CIT_09_2018-07-03', 'CIT_10_2018-07-04', 'CIT_11_2018-07-05', 'CIT_14_2018-07-06'],
+              temp_folder=r'/home/ruairi/CIT_WAY/csvs/temp',
               spike_selection_method='min',
               num_spikes=1100,
               num_channels=32,
               num_samples=240,
-              fig_folder=r'G:\Rawdata\SERT\figures',
+              fig_folder=r'/home/ruairi/CIT_WAY/figures',
               last_spikes=False,
               thresh_udu=12,
               thresh_du=10,

@@ -26,14 +26,14 @@ Parameters to change:
     operating_system         = 'win' if windows, otherwise 'unix'
 '''
 
-ops = Options(recordings_to_extract=['2018-04-12_371b', '2018-04-16_401b', '2018-04-17_401c', '2018-04-18'],
-              experiment='DREADD',
-              kilosort_folder=r'G:\Rawdata\SERT',
-              spikes_df_csv_out_folder=r'G:\Rawdata\SERT\spikes_time_series',
+ops = Options(recordings_to_extract=['CIT_09_2018-07-03', 'CIT_10_2018-07-04', 'CIT_11_2018-07-05', 'CIT_14_2018-07-06'],
+              experiment='CIT',
+              kilosort_folder=r'/home/ruairi/CIT_WAY',
+              spikes_df_csv_out_folder=r'/home/ruairi/CIT_WAY/spikes_time_series',
               sampling_rate=30000,
               chars_condition='Baseline',
               verbose=True,
-              operating_system='win'
+              operating_system='unix'
               )
 
 if __name__ == '__main__':
