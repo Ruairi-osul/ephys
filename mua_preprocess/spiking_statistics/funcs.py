@@ -52,15 +52,19 @@ def calculate_neuron_cov(col, num_mins_per_bin, total_time):
     cv_isis = pd.Series(np.zeros(num_bins))
 
     for ind, col_bin in enumerate(col_bins):
-        spike_times = pd.to_numeric(col_bin[col_bin.notnull()].index.values)
-        try:
-            spike_train = SpikeTrain(times=spike_times,
-                                     t_stop=spike_times[-1],
-                                     units=ns)
-            plt.tight_layout()
-            cv_isi = cv(isi(spike_train))
-        except IndexError:
-            cv_isi = np.nan
+        num_spikes = np.sum(col_bin == 1)
+        if not num_spikes:
+            cv_isi = 0
+        else:
+            spike_times = pd.to_numeric(col_bin[col_bin.notnull()].index.values)
+            try:
+                spike_train = SpikeTrain(times=spike_times,
+                                         t_stop=spike_times[-1],
+                                         units=ns)
+                cv_isi = cv(isi(spike_train))
+            except IndexError:
+                cv_isi = 0
+        
         cv_isis[ind] = cv_isi
 
     return cv_isis
@@ -125,7 +129,11 @@ def calculate_neuron_mfr_sum_notnull(col, num_mins_per_bin, total_time):
     col_bins = np.array_split(col, num_bins)
     mfrs = pd.Series(np.zeros(num_bins))
     for ind, each_bin in enumerate(col_bins):
-        mfr = np.sum(each_bin.notnull())/120
+        num_spikes = np.sum(each_bin == 1)
+        if not num_spikes:
+            mfr = 0
+        else:
+            mfr = np.sum(each_bin.notnull())/120
         mfrs[ind] = mfr
     return mfrs
 

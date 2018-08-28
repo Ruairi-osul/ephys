@@ -128,10 +128,10 @@ def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster, 
     plt.ylim(-1200, 800)
     plt.tick_params(axis='both', which='major', labelsize=50)
     locs, labels = plt.xticks()
-    plt.xticks(np.arange(time_chosen-5, time_chosen+7,2), np.arange(0, 12, 2.0))
+    plt.xticks(np.arange(time_chosen-2.5, time_chosen+3.5,1), np.arange(0, 6, 1.0))
     plt.xlabel('Time [s]', **font, fontsize=70)
     plt.ylabel('Voltage [µV]', **font, fontsize=70)
-    plt.title('Slow Regular', **font, fontsize=80)
+    plt.title('V.Fast Firing', **font, fontsize=80)
     plt.annotate('no. of spikes: {}'.format(len(highlighted_spike_list)), xy=(time_chosen, 1500), xytext=(time_chosen, 1500), size=30)
     mkdirs_(fig_folder)
     if time_chosen >= 60*60: 

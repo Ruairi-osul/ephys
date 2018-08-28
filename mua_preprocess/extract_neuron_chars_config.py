@@ -26,10 +26,10 @@ Parameters to change:
     operating_system         = 'win' if windows, otherwise 'unix'
 '''
 
-ops = Options(recordings_to_extract=['2018-04-12_371b', '2018-04-16_401b', '2018-04-17_401c', '2018-04-18'],
-              experiment='DREADD',
-              kilosort_folder=r'G:\Rawdata\SERT',
-              spikes_df_csv_out_folder=r'G:\Rawdata\SERT\spikes_time_series',
+ops = Options(recordings_to_extract=['Chronic_03_2018-07-29', 'Chronic_04_2018-08-05', 'Chronic_11_2018-08-04', 'Chronic_13_2018_08_08', 'Chronic_14_2018-08-14', 'Chronic_30_2018-07-28', 'Chronic_31_2018-08-10', 'Chronic_33_2018-07-30', 'Chronic_40_2018-08-13', 'Chronic_41_2018-08-09'],
+              experiment='CIT',
+              kilosort_folder=r'E:\CIT_WAY\dat_files\cat',
+              spikes_df_csv_out_folder=r'E:\CIT_WAY\dat_files\cat\spikes_time_series',
               sampling_rate=30000,
               chars_condition='Baseline',
               verbose=True,
