@@ -24,7 +24,7 @@ Change the following parameters:
 
     operating_system = the operating_system on which the sript is being run
                        choose 'win' or 'unix'
-
+our code is located in one file, t
 
 ROS 2018
 
@@ -35,16 +35,17 @@ cambridge_chan_map = [22, 17, 28, 25, 29, 26, 20, 23,
                       21, 27, 31, 18, 30, 19, 24, 32,
                       6, 1, 12, 9, 13, 10, 4, 7, 5, 11,
                       15, 2, 14, 3, 8, 16]
-
+                      
 ops = Options(recordings_to_pack=['Chronic_41_2018-08-09_15-34-14_PRE',
                                   'Chronic_41_2018-08-09_16-35-35_CIT',
                                   'Chronic_41_2018-08-09_17-36-56_WAY'],
               openephys_folder=r'G:\Rawdata\CIT WAY',
               dat_folder=r'G:\Rawdata\CIT WAY\dat_files',
               chan_map=cambridge_chan_map,
-              ref_method='ave',
-              operating_system='win',
+              ref_method='',
+              operating_system='unix',
               verbose=True)
 
 if __name__ == '__main__':
     main(ops)
+

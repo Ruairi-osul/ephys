@@ -33,7 +33,7 @@ ops = Options(recordings_to_extract=['Chronic_03_2018-07-29', 'Chronic_04_2018-0
               sampling_rate=30000,
               chars_condition='Baseline',
               verbose=True,
-              operating_system='win'
+              operating_system='unix'
               )
 
 if __name__ == '__main__':
