@@ -56,16 +56,18 @@ def main(ops):
             mean_firing_rates_ts = df_ts_all.apply(func=calculate_neuron_mfr_sum_notnull,
                                            num_mins_per_bin=2,
                                            total_time=np.int(max_time / 60))
-
-        plot_cluster(dfs=[mean_firing_rates_ts, cv_isis_ts],
-                     max_time=max_time,
-                     df_base=df_ts,
-                     recording=recording,
-                     experiment=ops.experiment,
-                     medians=[df_stats['Firing Rate'], df_stats['CV ISI']],
-                     labs=['Firing Rate [Hz]', 'CV-ISI'],
-                     fig_folder=ops.fig_folder,
-                     n_conditions=n_conditions)
+        try:
+            plot_cluster(dfs=[mean_firing_rates_ts, cv_isis_ts],
+                        max_time=max_time,
+                        df_base=df_ts,
+                        recording=recording,
+                        experiment=ops.experiment,
+                        medians=[df_stats['Firing Rate'], df_stats['CV ISI']],
+                        labs=['Firing Rate [Hz]', 'CV-ISI'],
+                        fig_folder=ops.fig_folder,
+                        n_conditions=n_conditions)
+        except ValueError:
+            print(f'Error plotting {recording}')
         df_list.append(df_stats)
     df_merged = pd.concat(df_list)
     df_merged.reset_index(inplace=True)

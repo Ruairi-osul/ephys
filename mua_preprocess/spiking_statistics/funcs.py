@@ -141,68 +141,71 @@ def get_medians(df, lab):
 
 
 def plot_cluster(dfs, max_time, experiment, df_base, recording, fig_folder, medians, n_conditions, labs=['Firing Rate', 'CV-ISI']):
-    num_mins = np.int(max_time / 60)
+    try:
+        num_mins = np.int(max_time / 60)
 
-    if experiment == 'CIT':
-        condition_lab_1 = 'Citalopram'
-        condition_lab_2 = 'WAY'
+        if experiment == 'CIT':
+            condition_lab_1 = 'Citalopram'
+            condition_lab_2 = 'WAY'
 
-    elif experiment == 'DREADD':
-        condition_lab_1 = 'CNO'
+        elif experiment == 'DREADD':
+            condition_lab_1 = 'CNO'
 
-    for col in range(len(dfs[0].columns)):
-        # New set of plots for each column (for each cluster)
-        f, a = plt.subplots(figsize=(12, 12), nrows=3)
+        for col in range(len(dfs[0].columns)):
+            # New set of plots for each column (for each cluster)
+            f, a = plt.subplots(figsize=(12, 12), nrows=3)
 
-        for ind, df in enumerate(dfs):
-            # Plot Firing rate and CV ISI over time
-            x = np.linspace(0, num_mins, len(df))
-            y = df.iloc[:, col]
-            a[ind].plot(x, y, linewidth=1.5)
+            for ind, df in enumerate(dfs):
+                # Plot Firing rate and CV ISI over time
+                x = np.linspace(0, num_mins, len(df))
+                y = df.iloc[:, col]
+                a[ind].plot(x, y, linewidth=1.5)
 
-            # Plot line for median Firing rate
-            line_y = np.ones(10) * medians[ind].iloc[col]
-            line_x = np.linspace(1, num_mins, 10)
-            a[ind].plot(line_x, line_y, linestyle='--', color='k',
-                        label='Median {lab}:{num}'.format(lab=labs[ind], num=str(np.round(medians[ind].iloc[col], 2))))
+                # Plot line for median Firing rate
+                line_y = np.ones(10) * medians[ind].iloc[col]
+                line_x = np.linspace(1, num_mins, 10)
+                a[ind].plot(line_x, line_y, linestyle='--', color='k',
+                            label='Median {lab}:{num}'.format(lab=labs[ind], num=str(np.round(medians[ind].iloc[col], 2))))
 
-            # Set condition indicators
-            condition_indecator_y = (np.ones(2) * np.max(df.iloc[:, col])) + 1
-            condition_indecator_x = np.linspace(60, num_mins, 2)
-            a[ind].plot(condition_indecator_x, condition_indecator_y, linewidth=4, label=(condition_lab_1))
+                # Set condition indicators
+                condition_indecator_y = (np.ones(2) * np.max(df.iloc[:, col])) + 1
+                condition_indecator_x = np.linspace(60, num_mins, 2)
+                a[ind].plot(condition_indecator_x, condition_indecator_y, linewidth=4, label=(condition_lab_1))
 
-            # Indicate WAY if data from CIT experiment
-            if n_conditions == 2 and experiment == 'CIT':
-                condition_indecator_x = np.linspace(120, num_mins, 2)
-                condition_indecator_y = (np.ones(2) * np.max(df.iloc[:, col])) + 0.3
-                a[ind].plot(condition_indecator_x, condition_indecator_y, linewidth=4, label=(condition_lab_2))
+                # Indicate WAY if data from CIT experiment
+                if n_conditions == 2 and experiment == 'CIT':
+                    condition_indecator_x = np.linspace(120, num_mins, 2)
+                    condition_indecator_y = (np.ones(2) * np.max(df.iloc[:, col])) + 0.3
+                    a[ind].plot(condition_indecator_x, condition_indecator_y, linewidth=4, label=(condition_lab_2))
 
-            a[ind].set_title('{lab} over time.\nCluster {clus}'. format(clus=df.columns[col], lab=labs[ind]))
+                a[ind].set_title('{lab} over time.\nCluster {clus}'. format(clus=df.columns[col], lab=labs[ind]))
 
-            # Set plot aesthetics
-            a[ind].set_ylabel(labs[ind])
-            a[ind].set_xlabel('Time [minutes]')
-            a[ind].fill_between(x, y, alpha=0.4)
-            a[ind].legend()
+                # Set plot aesthetics
+                a[ind].set_ylabel(labs[ind])
+                a[ind].set_xlabel('Time [minutes]')
+                a[ind].fill_between(x, y, alpha=0.4)
+                a[ind].legend()
 
-        if not os.path.exists(fig_folder):
-            os.mkdir(fig_folder)
+            if not os.path.exists(fig_folder):
+                os.mkdir(fig_folder)
 
-        spike_times = pd.to_numeric(df_base.iloc[:, col][df_base.iloc[:, col].notnull()].index.values) / 10**10
-        spike_train = SpikeTrain(times=spike_times,
-                                 t_stop=spike_times[-1],
-                                 units=s)
-        isis = isi(spike_train)
-        isis = np.array(isis) * 10
-        a[2].hist(isis, bins=np.int(len(isis) / 4), alpha=0.8)
-        a[2].set_title('Inter Spike Interval Histogram')
-        a[2].set_xlim([0, 3.5])
-        a[2].set_xlabel('Time [Seconds]')
-        plt.tight_layout()
-        path = os.path.join(fig_folder, recording)
-        mkdirs_(path)
-        plt.savefig(''.join([os.path.join(fig_folder, recording, str(col)), '.png']))
-        plt.close()
+            spike_times = pd.to_numeric(df_base.iloc[:, col][df_base.iloc[:, col].notnull()].index.values) / 10**10
+            spike_train = SpikeTrain(times=spike_times,
+                                    t_stop=spike_times[-1],
+                                    units=s)
+            isis = isi(spike_train)
+            isis = np.array(isis) * 10
+            a[2].hist(isis, bins=np.int(len(isis) / 4), alpha=0.8)
+            a[2].set_title('Inter Spike Interval Histogram')
+            a[2].set_xlim([0, 3.5])
+            a[2].set_xlabel('Time [Seconds]')
+            plt.tight_layout()
+            path = os.path.join(fig_folder, recording)
+            mkdirs_(path)
+            plt.savefig(''.join([os.path.join(fig_folder, recording, str(col)), '.png']))
+            plt.close()
+    except (ValueError, IndexError):
+        raise ValueError()
 
 
 def mkdirs_(path):

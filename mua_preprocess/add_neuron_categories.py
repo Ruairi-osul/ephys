@@ -2,12 +2,12 @@ import pandas as pd
 import os
 from glob import glob
 
-path_to_neuron_stats = r'/home/ruairi/CIT_WAY/csvs'
+path_to_neuron_stats = r'/media/ruairi/Ephys_back_up_1/SERT_DREADD/csvs'
 neuron_stats_csv_name = 'neuron_stats'
 
-path_to_ts = r'/home/ruairi/CIT_WAY/spikes_time_series'
+path_to_ts = r'/media/ruairi/Ephys_back_up_1/SERT_DREADD/csvs/spikes_time_series'
 
-file_out_dir = r'/home/ruairi/CIT_WAY/csvs'
+file_out_dir = r'/media/ruairi/Ephys_back_up_1/SERT_DREADD/csvs'
 file_out_name_ts = 'all_neurons_ts_with_clusters.csv'
 
 
