@@ -21,3 +21,4 @@ ops = Options(kilosort_folder=r'/media/ruairi/Ephys_back_up_1/CIT_WAY/dat_files/
 
 if __name__ == '__main__':
     main(ops)
+    

@@ -31,16 +31,19 @@ def neuron_category_mapper(row):
     This is the function we use to categorise neurons as either slow or fast, and as either regular or irregular
     It categorises neurons firing slower than 4.5 Hz as slow and neurons with a CV ISI of less than 0.55 as regular
     '''
-    if row['Firing Rate'] <= 10:
+    if (row['Firing Rate'] <= 10) & (row['CV ISI'] <= 0.8):
         rate = 'slow'
-    else:
-        rate = 'fast'
-    if row['CV ISI'] <= 0.75:
         reg = 'regular'
-    else:
+    elif (row['Firing Rate'] <= 10) & (row['CV ISI'] >= 0.8):
+        rate = 'slow'
         reg = 'irregular'
+    elif (row['Firing Rate'] > 10) & (row['Firing Rate'] <25):
+        rate= 'fast'
+        reg = 'firing'
+    else:
+        rate= 'V.fast'
+        reg = 'firing'
     return ' '.join([rate, reg])
-
 
 df_ts = load_spikes_df(path_to_ts)
 df_stats = load_neuron_stats(path=path_to_neuron_stats, csv_name=neuron_stats_csv_name)

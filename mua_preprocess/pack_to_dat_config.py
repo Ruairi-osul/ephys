@@ -36,19 +36,12 @@ from pack_to_dat.pack_continuous_logic import main
 cambridge_chan_map = [22, 17, 28, 25, 29, 26, 20, 23,
                       21, 27, 31, 18, 30, 19, 24, 32,
                       6, 1, 12, 9, 13, 10, 4, 7, 5, 11,
-                      15, 2, 14, 3, 8, 16]
-
-ops = Options(recordings_to_pack=['Chronic_31_2018-08-10_13-49-50_PRE', 
-                                  'Chronic_31_2018-08-10_14-52-27_CIT', 
-                                  'Chronic_31_2018-08-10_15-52-52_WAY',
-                                  'Chronic_33_2018-07-30_16-04-03_PRE',
-                                  'Chronic_33_2018-07-30_17-07-11_CIT',
-                                  'Chronic_33_2018-07-30_18-08-22_WAY',
-                                  'Chronic_41_2018-08-09_15-34-14_PRE',
+                      15, 2, 14, 3, 8, 16]             
+ops = Options(recordings_to_pack=['Chronic_41_2018-08-09_15-34-14_PRE',
                                   'Chronic_41_2018-08-09_16-35-35_CIT',
                                   'Chronic_41_2018-08-09_17-36-56_WAY'],
-              openephys_folder=r'/media/ruairi/UBUNTU/CIT_WAY/continuous',
-              dat_folder=r'/media/ruairi/UBUNTU/CIT_WAY/dat_files',
+              openephys_folder=r'G:\Rawdata\CIT WAY',
+              dat_folder=r'G:\Rawdata\CIT WAY\dat_files',
               chan_map=cambridge_chan_map,
               ref_method='ave',
               operating_system='unix',
