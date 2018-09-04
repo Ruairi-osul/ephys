@@ -1,51 +1,38 @@
-'''
-This script converts many .continuous files to one .dat file
-
-Change the following parameters:
-    openephys_folder = root directory containing subdirectories containing .continuous files
-
-    recordings_to_pack = list of subdirecotry names (containing .continuous files)
-                         within openephys_folder of the recordings you wish to pack
-
-    dat_folder = root output folder for the packed .dat file
-
-    chan_map = rearrange channel labels such that channels most physically
-               close to each other have consecutive labels
-               N.B. only use this if the channel map is not already configured during
-               the recordings
-
-    ref_method = Once the data is packed to a single dat file, a filter can be
-                 applied to increase the quality of the signal. Choose an
-                 integer to sls
-                 ubtract that channel from all others. Use ave to
-                 apply a common average reference.
-
-    operating_system = the operating_system on which the sript is being run
-                       choose 'win' or 'unix'
-our code is located in one file, t
-
-ROS 2018
-
-'''
+import argparse
+import json
+import sys
+sys.path.append('/home/ruairi/repos')  #path to parent folder to ephys
+from ephys.package._classes.options import options_from_args
+from ephys.package.IO import mkdir
+from ephys.package.probe_preprocessing.continuous import pack_2
+import os
 
 
-from pack_to_dat.classes import Options
-from pack_to_dat.pack_continuous_logic import main
+def get_options():
+    parser = argparse.ArgumentParser(description='Packs concurrently recorded continuous files to one flat binary .dat file.')
+    parser.add_argument('-c', '--config_file', required=True, 
+                    help='path to options configuration [.json] file')
+    parser.add_argument('-r', '--recordings', required=True,
+                    help='recordings to pack. give a single recording or a comma-separated list of recordings (no spaces)')
+    parser.add_argument('-f', '--reference_method', help='reference method desired. defaults to "ave" for common average reference', default='ave')
+
+    args = parser.parse_args()
+    ops = options_from_args(args)
+    return ops
 
 
-cambridge_chan_map = [22, 17, 28, 25, 29, 26, 20, 23,
-                      21, 27, 31, 18, 30, 19, 24, 32,
-                      6, 1, 12, 9, 13, 10, 4, 7, 5, 11,
-                      15, 2, 14, 3, 8, 16]             
-ops = Options(recordings_to_pack=['Chronic_41_2018-08-09_15-34-14_PRE',
-                                  'Chronic_41_2018-08-09_16-35-35_CIT',
-                                  'Chronic_41_2018-08-09_17-36-56_WAY'],
-              openephys_folder=r'G:\Rawdata\CIT WAY',
-              dat_folder=r'G:\Rawdata\CIT WAY\dat_files',
-              chan_map=cambridge_chan_map,
-              ref_method='ave',
-              operating_system='unix',
-              verbose=True)
+def pack_recordings(ops):
+    for recording in ops.recordings:
+        pack_2(folderpath=os.path.join(ops.parent_dir, recording),
+               filename=os.path.join(ops.parent_dir, 'dat_files', recording) + '.dat',
+               channels=ops.chan_map,
+               chprefix='CH',
+               dref=ops.reference_method,
+               session='0',
+               source='100')
+
 
 if __name__ == '__main__':
-    main(ops)
+    ops = get_options()
+    mkdir(ops, 'dat_files')
+    pack_recordings(ops)

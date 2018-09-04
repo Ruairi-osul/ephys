@@ -1,0 +1,6 @@
+{"experiment":"cit_way",
+ "chan_map":[22, 17, 28, 25, 29, 26, 20, 23,
+    21, 27, 31, 18, 30, 19, 24, 32,
+    6, 1, 12, 9, 13, 10, 4, 7, 5, 11,
+    15, 2, 14, 3, 8, 16],
+ "continuous_dir": "/media/ruairi/Ephys_back_up_1/CIT_WAY"}
