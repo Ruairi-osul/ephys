@@ -23,7 +23,7 @@ def get_options():
 
 def pack_recordings(ops):
     for recording in ops.recordings:
-        pack_2(folderpath=os.path.join(ops.parent_dir, recording),
+        pack_2(folderpath=os.path.join(ops.continuous_dir, recording),
                filename=os.path.join(ops.parent_dir, 'dat_files', recording) + '.dat',
                channels=ops.chan_map,
                chprefix='CH',
