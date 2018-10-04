@@ -3,6 +3,7 @@
 import json
 import os
 
+
 class Options:
     '''Options class to store configuration choices'''
 
@@ -11,20 +12,21 @@ class Options:
             try:
                 assert isinstance(dictionary, dict)
             except AssertionError:
-                raise ValueError('Non Dictionary passed as positional argument to options')
+                raise ValueError(
+                    'Non Dictionary passed as positional argument to options')
             for key in dictionary:
                 setattr(self, key, dictionary[key])
 
         for key in kwargs:
             setattr(self, key, kwargs[key])
         self.parent_dir = self.parent_dir()
-        
 
     def parent_dir(self):
         try:
             assert hasattr(self, "continuous_dir")
         except AssertionError:
-            raise ValueError('Error calculating parent directory. "continuous_dir" attribute not present')
+            raise ValueError(
+                'Error calculating parent directory. "continuous_dir" attribute not present')
         return os.path.dirname(self.continuous_dir)
 
     def __str__(self):
@@ -40,10 +42,12 @@ def options_from_args(args):
 
     if ',' in args.recordings:
         args.recordings = args.recordings.split(',')
+    else:
+        args.recordings = [args.recordings]
 
     options = vars(args)
     if ('reference_method' in options.keys()) and options['reference_method'] is None:
-        options['reference_method'] == '' 
+        options['reference_method'] == ''
     options = dict(filter(lambda x: x[1] is not None, options.items()))
 
     with open(args.config_file) as file:

@@ -24,16 +24,16 @@ Parameters to change:
 '''
 
 
-ops = Options(recordings_to_analyse=['neuron_stats'],
-              data_dir=r'/Users/sharplab/tran/',
-              fig_dir=r'/Users/sharplab/tran/',
+ops = Options(recordings_to_analyse=['2018-10-02'],
+              data_dir=r'/media/ruairi/UBUNTU/SERT_DREADD/csvs',
+              fig_dir=r'/media/ruairi/UBUNTU/SERT_DREADD',
               condition='Baseline',
-              method='zscore',
+              method='percent',
               dpi=300,
-              vmin=-3,
-              vmax=3,
+              vmin=0,
+              vmax=200,
               verbose=True,
-              resample_period='60sec',
+              resample_period='S',
               rolling=200,
               operating_system='unix')
 
