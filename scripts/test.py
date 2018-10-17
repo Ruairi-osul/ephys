@@ -1,5 +1,5 @@
 import os
 
-s = '/media/ruairi/UBUNTU/CIT_WAY/dat_files/cat/Chronic_03_2018-07-2/Chronic_03_2018-07-29.dat'
+s = 'GATD_05_2018-10-14_16-55-49_CNO'
 
-print(os.path.dirname(s))
+print('_'.join(s.split('_')[0, 1, 2, 3, -1]))
