@@ -50,6 +50,7 @@ def get_recordings_todo(parent):
 
 
 def main(master, config, parent):
+    print('working')
     recordings_todo = get_recordings_todo(parent)
 
     for recording in recordings_todo:

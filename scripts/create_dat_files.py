@@ -4,7 +4,7 @@ import os
 sys.path.append('/home/ruairi/repos')  # path to parent folder to ephys
 
 from ephys.package._classes.options import options_from_args
-from ephys.package.probe_preprocessing.continuous import pack_2
+from preprocess import pack_2
 
 
 def get_options():
@@ -30,7 +30,6 @@ def pack_recordings(ops):
     if not os.path.exists(os.path.join(ops.parent_dir, 'dat_files', recording)):
       os.mkdir(os.path.join(ops.parent_dir,
                             'dat_files', recording))
-
     pack_2(folderpath=os.path.join(ops.continuous_dir, recording),
            filename=os.path.join(
                ops.parent_dir, 'dat_files', recording, recording) + '.dat',

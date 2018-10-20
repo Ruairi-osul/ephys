@@ -5,6 +5,8 @@ import scipy.signal
 import scipy.io
 import time
 from copy import deepcopy
+from functools import partial
+from glob import glob
 
 # constants
 NUM_HEADER_BYTES = 1024
@@ -273,6 +275,8 @@ def get_waveforms(recording_id, processed_data_dir, raw_data_dir,
         return spike_times
 
     def _load_raw_data():
+        ''' given a path to a .dat file, loads np.memmap object of that file'''
+
         dat_filename = recordings_table.loc[recordings_table['recording_id']
                                             == recording_id]['dat_filename'].values[0]
 
@@ -338,3 +342,47 @@ def get_recording_id(subject_table, recording_path):
         print('''Recording table not found.
               Path searching: {}'''.format(subject_table))
     return df.loc[df['dat_filename'] == os.path.basename(recording_path), :]['recording_id']
+
+
+def get_subfolders(parent, containing_filetype=None, verbose=True):
+    '''Used in automatic preprocessing [continuous -> .dat -> kilosort]
+
+    Given a parant directory, provides subdirectories that
+
+    Usage:
+        dirs_with_npy_files =  get_subfolders(some_dir, containing_filetype='.npy')
+    '''
+
+    def _walklevel(some_dir, level=1):
+        some_dir = some_dir.rstrip(os.path.sep)
+        assert os.path.isdir(some_dir)
+        num_sep = some_dir.count(os.path.sep)
+        for root, dirs, files in os.walk(some_dir):
+            yield root, dirs, files
+            num_sep_this = root.count(os.path.sep)
+            if num_sep + level <= num_sep_this:
+                del dirs[:]
+
+    def _has_ext(path, ext):
+        if '.' not in ext:
+            ext = ''.join(['.', ext])
+        return bool(glob(os.path.join(path, ''.join(['*', ext]))))
+
+    # get paths
+    try:
+        paths = [x[0]
+                 for x in _walklevel(parent, level=1) if
+                 os.path.isdir(x[0])]
+        if parent in paths:
+            del paths[paths.index(parent)]
+    except AssertionError:
+        if verbose:
+            print('Could not find {} dir'.format(parent))
+        raise
+
+    # filter to only have the ext.
+    if containing_filetype:
+        f = partial(_has_ext, ext=containing_filetype)
+        paths = list(filter(f, paths))
+
+    return paths

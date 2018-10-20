@@ -5,6 +5,7 @@ from functools import partial
 from glob import glob
 from continuous_dat import main as pack_to_dat
 from autokilosort import main as ks
+from preprocess import get_subfolders
 
 
 class Recording:
@@ -47,44 +48,34 @@ def _get_options():
     return parser.parse_args()
 
 
-def get_subfolders(parent, containing_filetype=None, verbose=True):
-
-    def _walklevel(some_dir, level=1):
-        some_dir = some_dir.rstrip(os.path.sep)
-        assert os.path.isdir(some_dir)
-        num_sep = some_dir.count(os.path.sep)
-        for root, dirs, files in os.walk(some_dir):
-            yield root, dirs, files
-            num_sep_this = root.count(os.path.sep)
-            if num_sep + level <= num_sep_this:
-                del dirs[:]
-
-    def _has_ext(path, ext):
-        if '.' not in ext:
-            ext = ''.join(['.', ext])
-        return bool(glob(os.path.join(path, ''.join(['*', ext]))))
-
-    try:
-        paths = [x[0]
-                 for x in _walklevel(parent, level=1) if os.path.isdir(x[0])]
-        if parent in paths:
-            del paths[paths.index(parent)]
-    except AssertionError:
-        if verbose:
-            print('Could not find {} dir'.format(parent))
-        raise
-
-    if containing_filetype:
-        f = partial(_has_ext, ext=containing_filetype)
-        paths = list(filter(f, paths))
-
-    return paths
-
-
 def organise_into_objects(todo):
+    '''Given list of continuous dirs [absolute path], finds out which dirs belong to same recordings
+    Generate one Recording object per recording
+
+    Each recording object has attributes for paths to continuous
+    files for each condition.
+
+    Recording objects alsp have a self.has_condition1() method that returns a bool
+    of whether condition1 is present
+
+    TODO:
+
+        Add code that allows for different number of conditions to be present
+        Change the filtering method for detecting PRE/CIT/WAY
+        Check if it works for SEART_DREADD
+
+    Idea:
+        if experiment in [SERT_DREADD, GAT_DREADD]:
+            num_conditions = 2
+            baseline, condition_1 = 'pre', 'cno'
+
+    '''
     out = []
+
+    #
     bases = list(map(os.path.basename, todo))
     recordings = set(['_'.join(x.split('_')[:-2]) for x in bases])
+
     for recording in recordings:
         try:
             pre = list(
@@ -107,6 +98,13 @@ def organise_into_objects(todo):
 
 
 def cat_recordings(out_name, pre_file, cond_file, dat_file_dir):
+    '''Needs to be changed so that cit way works
+
+    TO DO:
+        change arguments to *args
+
+
+    '''
     out_name = os.path.join(dat_file_dir, out_name, out_name) + '.dat'
     call_string = ' '.join([pre_file, cond_file])
     call_string = ' '.join(['cat', call_string, '>', out_name])
@@ -141,7 +139,13 @@ def mv_recordings(out_name, pre_file, dat_file_dir):
 
 
 def get_files_todo(dat_file_dir, continuous_dir, verbose):
+    '''Given a path to the dat_files and continuous_files parent directories,
+    returns the files that need
 
+    returns a list of all continuous fils that needing kilosort
+    '''
+
+    # 1. get dats
     try:
         done_files = get_subfolders(parent=dat_file_dir,
                                     containing_filetype='.dat',
@@ -153,12 +157,13 @@ def get_files_todo(dat_file_dir, continuous_dir, verbose):
         os.mkdir(dat_file_dir)
         done_files = []
 
+    # 2. get continuous
     continuous_dirs = get_subfolders(parent=continuous_dir,
                                      containing_filetype='.continuous',
                                      verbose=verbose)
 
+    # 3. filter out continuous files that have been done
     dat_base = list(map(os.path.basename, done_files))
-
     if not dat_base:
         todo = continuous_dirs
     else:
@@ -187,31 +192,46 @@ def main(continuous_dir, dat_file_dir, temp_dat_dir,
                                recording=recording.pre,
                                out_dir=temp_dat_dir,
                                chan_map=chan_map)
-        print('\n' * 5)
-        print('Done')
+        if verbose:
+            print('\n' * 5)
+            print('Done')
         if recording.has_cond():
-            print('\n' * 5)
-            print('packing: {}'.format(recording.cond))
-            print('\n' * 5)
+            if verbose:
+                print('\n' * 5)
+                print('packing: {}'.format(recording.cond))
+                print('\n' * 5)
             temp_cond = pack_to_dat(in_dir=continuous_dir,
                                     recording=recording.cond,
                                     out_dir=temp_dat_dir,
-                                    chan_map=chan_map)
-            print('\nAttempting to concatenate files')
+                                    chan_map=chan_map,
+                                    reference_method=reference_method)
+            if verbose:
+                print('\nAttempting to concatenate files')
             cat_recordings(out_name=recording.name,
                            pre_file=temp_pre,
                            cond_file=temp_cond,
                            dat_file_dir=dat_file_dir)
         else:
-            print('\n' * 5)
-            print('moving to dat folder: {}'.format(temp_pre))
-            print('\n' * 5)
+            if verbose:
+                print('\n' * 5)
+                print('moving to dat folder: {}'.format(temp_pre))
+                print('\n' * 5)
             mv_recordings(out_name=recording.name,
                           pre_file=temp_pre,
                           dat_file_dir=dat_file_dir)
+    if verbose:
+        print('\n' * 5)
+        print('''Running Kilosort: \nmaster:     {}
+            \nconfig:    {}\ndatfiledir:     {}'''.format(master_kilosort,
+                                                          config_kilosort,
+                                                          dat_file_dir))
+        print('\n' * 5)
     ks(master=master_kilosort,
         config=config_kilosort,
         parent=dat_file_dir)
+    if verbose:
+        print('Deleting temperary .dat files')
+    os.system('rm -r {}'.format(temp_dat_dir))
 
 
 if __name__ == '__main__':

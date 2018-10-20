@@ -38,60 +38,64 @@ def main(in_dir, recording, out_dir, chan_map, reference_method='ave',
         pack_2(folderpath=in_path,
                filename=out_path,
                chprefix=chprefix,
+               channels=chan_map,
                dref=reference_method,
                session=session,
                source=source)
         done = True
     except (OSError, IndexError):
-        print('''Could not load data for recording {a}.
+        print('''\nCould not load data for recording {a}.
                  with session indicator {b} and source indicator {c}.
                  Trying with session indicator {d}
-                 and source indicator {e}'''.format(a=in_path,
-                                                    b=session,
-                                                    c=source,
-                                                    d='1',
-                                                    e='100'))
+                 and source indicator {e}\n'''.format(a=in_path,
+                                                      b=session,
+                                                      c=source,
+                                                      d='1',
+                                                      e='100'))
     if not done:
         try:  # source = 100, session = 1
             pack_2(folderpath=in_path,
                    filename=out_path,
                    chprefix=chprefix,
+                   channels=chan_map,
                    dref=reference_method,
                    session='1',
                    source=source)
             done = True
         except (OSError, IndexError):
-            print('''Could not load data for recording {a}.
+            print('''\nCould not load data for recording {a}.
                      with session indicator {b} and source indicator {c}.
                      Trying with source indicator {d}
-                     and session indicator {e}'''.format(a=in_path,
-                                                         b='1',
-                                                         c='100',
-                                                         d='120',
-                                                         e='0'))
+                     and session indicator {e}\n'''.format(a=in_path,
+                                                           b='1',
+                                                           c='100',
+                                                           d='120',
+                                                           e='0'))
     if not done:
         try:  # source = 120, session = 0
             pack_2(folderpath=in_path,
                    filename=out_path,
                    chprefix=chprefix,
+                   channels=chan_map,
                    dref=reference_method,
                    session=session,
                    source='120')
             done = True
         except (OSError, IndexError):
-            print('''Could not load data for recording {a}.
+            print('''\nCould not load data for recording {a}.
                      with session indicator {b} and source indicator {d}.
                      Trying with source indicator {d}
-                     and session indicator {e}'''.format(a=in_path,
-                                                         b='0',
-                                                         c='1',
-                                                         d='120',
-                                                         e='1'))
+                     and session indicator {e}\n'''.format(a=in_path,
+                                                           b='0',
+                                                           c='1',
+                                                           d='120',
+                                                           e='1'))
     if not done:
         try:  # source = 120, session = 1
             pack_2(folderpath=in_path,
                    filename=out_path,
                    chprefix=chprefix,
+                   channels=chan_map,
                    dref=reference_method,
                    session='1',
                    source='120')
@@ -110,6 +114,7 @@ def main(in_dir, recording, out_dir, chan_map, reference_method='ave',
             pack_2(folderpath=in_path,
                    filename=out_path,
                    chprefix=chprefix,
+                   channels=chan_map,
                    dref=reference_method,
                    session='2',
                    source='120')
@@ -150,4 +155,4 @@ if __name__ == '__main__':
              recording=recording,
              out_dir=args['temp_dat_dir'],
              chan_map=args['chan_map'],
-             reference_method='ave')
+             reference_method=args['reference_method'])
