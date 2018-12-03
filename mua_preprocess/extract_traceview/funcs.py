@@ -58,14 +58,6 @@ def apply_filter(array, low, high, fs, order, axis=-1):
     return ss.filtfilt(b, a, array, axis=axis)
 
 
-def create_trace_parameters(time_span, extracted_spikes, Spike_chosen):
-    num_samples_in_trace = time_span * 30000
-    waveform_window = np.arange(int(-num_samples_in_trace / 2), int(num_samples_in_trace / 2))
-    start_index = int(extracted_spikes.iloc[Spike_chosen] + waveform_window[0])
-    end_index = int((extracted_spikes.iloc[Spike_chosen] + waveform_window[-1]) + 1)
-    return start_index, end_index
-
-
 def extract_highlighted_spikes(time_span, extracted_spikes, Spike_chosen):
     num_samples_in_trace = time_span * 30000
     waveform_window = np.arange(int(-num_samples_in_trace / 2), int(num_samples_in_trace / 2))
@@ -93,6 +85,14 @@ def extract_trace(Spike_chosen, extracted_spikes, time_span, data, chosen_channe
     df_trace = pd.DataFrame({'Value': filtered_data})
     df_trace['time'] = np.arange(start_index / 30000, end_index / 30000, 1 / 30000)
     return df_trace
+
+
+def create_trace_parameters(time_span, extracted_spikes, Spike_chosen):
+    num_samples_in_trace = time_span * 30000
+    waveform_window = np.arange(int(-num_samples_in_trace / 2), int(num_samples_in_trace / 2))
+    start_index = int(extracted_spikes.iloc[Spike_chosen] + waveform_window[0])
+    end_index = int((extracted_spikes.iloc[Spike_chosen] + waveform_window[-1]) + 1)
+    return start_index, end_index
 
 
 def choose_channel(Spike_chosen, extracted_spikes, time_span, data, broken_chans, num_spikes_for_averaging):
@@ -123,18 +123,18 @@ def spike_highlight(spike, extracted_spikes, data, chosen_channel):
 
 
 def plot_final_data(kilosort_folder, recording, chosen_channel, chosen_cluster, highlighted_spike_list, time_chosen):
-    fig_folder =  os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster))
-    font = {'fontname':'Calibri'}
+    fig_folder = os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster))
+    # font = {'fontname': 'Calibri'}
     plt.ylim(-1200, 800)
     plt.tick_params(axis='both', which='major', labelsize=50)
     locs, labels = plt.xticks()
-    plt.xticks(np.arange(time_chosen-2.5, time_chosen+3.5,1), np.arange(0, 6, 1.0))
-    plt.xlabel('Time [s]', **font, fontsize=70)
-    plt.ylabel('Voltage [µV]', **font, fontsize=70)
-    plt.title('V.Fast Firing', **font, fontsize=80)
+    plt.xticks(np.arange(time_chosen - 2.5, time_chosen + 3.5, 1), np.arange(0, 6, 1.0))
+    plt.xlabel('Time [s]', fontsize=70)
+    plt.ylabel('Voltage [uV]', fontsize=70)
+    plt.title('V.Fast Firing', fontsize=80)
     plt.annotate('no. of spikes: {}'.format(len(highlighted_spike_list)), xy=(time_chosen, 1500), xytext=(time_chosen, 1500), size=30)
     mkdirs_(fig_folder)
-    if time_chosen >= 60*60: 
+    if time_chosen >= 60 * 60:
         figpath = os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster), recording + ' Cluster no.' + str(chosen_cluster) + ' After.png')
     else:
         figpath = os.path.join(kilosort_folder, recording, 'figures', 'Cluster no.' + str(chosen_cluster), recording + ' Cluster no.' + str(chosen_cluster) + ' Before.png')
@@ -148,6 +148,7 @@ def choose_cluster_to_plot(cluster_groups, spike_clusters, spike_times, chosen_c
     df = df.loc[df['cluster'].isin(good_cluster_numbers)]
     cluster_to_plot = good_cluster_numbers[good_cluster_numbers == chosen_cluster][0]
     return df, cluster_to_plot
+
 
 def mkdirs_(path):
     if not os.path.exists(path):
