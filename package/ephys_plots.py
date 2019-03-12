@@ -46,7 +46,8 @@ def heatmap_by_cluster(data_categories,
     row_color_series.index = data_categories.neuron_id.values
     mapper = {}
     for cat in data_categories['hc_cluster'].unique():
-        mapper[cat] = data_categories[data_categories['hc_cluster'] == cat]['colors'].values[0]
+        mapper[cat] = data_categories[data_categories['hc_cluster']
+                                      == cat]['colors'].values[0]
 
     dfp = _scale_format_data(
         data_ts, data_categories=data_categories,
@@ -58,7 +59,7 @@ def heatmap_by_cluster(data_categories,
                         xticklabels=4)
 
     if len(data_ts > 60):
-        axvlines(60, ax=cm.ax_heatmap, linewidth=5,
+        axvlines(60, ax=cm.ax_heatmap, linewidth=18,
                  color='k', label='Citalopram Administration')
     # cm.ax_heatmap.legend()
 
@@ -68,6 +69,14 @@ def heatmap_by_cluster(data_categories,
     if label:
         cm.ax_heatmap.legend(bbox_to_anchor=(0.5, 1.1), loc=2)
         cm.ax_heatmap = _legend_maker(mapper, ax=cm.ax_heatmap)
+
+    # # cm.ax_heatmap.set_xticks(np.linspace(0, len(dfp), 6))
+    # cm.ax_heatmap.set_xticklabels(fontdict={'fontsize': 40,
+    #                                         'fontweight': 10})
+
+    for tick in cm.ax_heatmap.xaxis.get_major_ticks():
+        tick.label.set_fontweight(20)
+        tick.label.set_fontweight(100)
     return cm
 
 
@@ -77,8 +86,10 @@ def _scale_format_data(data_ts, data_categories, scaler=None, norm_period=3600):
         scaler = StandardScaler()
 
     scaler.fit(data_ts.iloc[:norm_period, :])
-    dfp = pd.DataFrame(scaler.transform(data_ts.values), columns=data_ts.columns)
-    dfp.index = np.round(np.linspace(-norm_period, norm_period, data_ts.shape[0]) / 6, 2)
+    dfp = pd.DataFrame(scaler.transform(
+        data_ts.values), columns=data_ts.columns)
+    dfp.index = np.round(
+        np.linspace(-norm_period, norm_period, data_ts.shape[0]) / 2, 2)
     dfp = dfp.transpose()
     dfp.index = data_categories.neuron_id.values
     return dfp
@@ -89,11 +100,11 @@ def _legend_maker(mapper, ax):
                for cat, color in mapper.items()]
 
     legends = ax.legend(loc='best',
-                        bbox_to_anchor=(0.3, 1.1),
+                        bbox_to_anchor=(0.2, 0.99),
                         handles=patches,
                         frameon=True,
-                        markerscale=10, prop={'size': 10.5})
-    legends.set_title(title='Neuron Categories', prop={'size': 20})
+                        markerscale=10, prop={'size': 80.5})
+    legends.set_title(title='Neuron Categories', prop={'size': 90})
     return ax
 
 
