@@ -1,0 +1,13 @@
+{
+    "recording_id": ,
+    "mouse_id": ,
+    "group_id": ,
+    "probe_id": 1,
+    "eeg_config": ,
+    "recording_date": ,
+    "end_time": ,
+    "probe_fs": ,
+    "eeg_fs": ,
+    "dat_filename": ,
+    "excluded":
+}

@@ -1,7 +1,9 @@
 import argparse
-from preprocess import pack_2
+import sys
 import os
 import json
+sys.path.append('/home/ruairi/repos/ephys/package')
+from preprocess import pack_2
 
 
 def _get_options():

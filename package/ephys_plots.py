@@ -36,7 +36,7 @@ def heatmap_by_cluster(data_categories,
                        data_ts,
                        cluster_lab='hc_cluster',
                        scaler=None,
-                       norm_period=3600, vmin=-3, vmax=3,
+                       norm_period=None, vmin=-3, vmax=3,
                        cmap='coolwarm', spacing=True,
                        size=(25, 10), label=True):
 
@@ -45,8 +45,8 @@ def heatmap_by_cluster(data_categories,
     row_color_series = data_categories[['colors']]
     row_color_series.index = data_categories.neuron_id.values
     mapper = {}
-    for cat in data_categories['hc_cluster'].unique():
-        mapper[cat] = data_categories[data_categories['hc_cluster']
+    for cat in data_categories[cluster_lab].unique():
+        mapper[cat] = data_categories[data_categories[cluster_lab]
                                       == cat]['colors'].values[0]
 
     dfp = _scale_format_data(
@@ -58,9 +58,8 @@ def heatmap_by_cluster(data_categories,
                         vmin=vmin, vmax=vmax, cmap=cmap, figsize=size,
                         xticklabels=4)
 
-    if len(data_ts > 60):
-        axvlines(60, ax=cm.ax_heatmap, linewidth=18,
-                 color='k', label='Citalopram Administration')
+    axvlines(len(data_ts) // 2, ax=cm.ax_heatmap, linewidth=18,
+             color='k', label='Citalopram Administration')
     # cm.ax_heatmap.legend()
 
     if spacing:
@@ -70,22 +69,25 @@ def heatmap_by_cluster(data_categories,
         cm.ax_heatmap.legend(bbox_to_anchor=(0.5, 1.1), loc=2)
         cm.ax_heatmap = _legend_maker(mapper, ax=cm.ax_heatmap)
 
-    # # cm.ax_heatmap.set_xticks(np.linspace(0, len(dfp), 6))
     # cm.ax_heatmap.set_xticklabels(fontdict={'fontsize': 40,
     #                                         'fontweight': 10})
 
     for tick in cm.ax_heatmap.xaxis.get_major_ticks():
         tick.label.set_fontweight(20)
-        tick.label.set_fontweight(100)
+        tick.label.set_fontweight(40)
+        tick.label.set_fontsize(0.1)
     return cm
 
 
-def _scale_format_data(data_ts, data_categories, scaler=None, norm_period=3600):
+def _scale_format_data(data_ts, data_categories, scaler=None, norm_period=None):
     if scaler is None:
         from sklearn.preprocessing import StandardScaler
         scaler = StandardScaler()
 
-    scaler.fit(data_ts.iloc[:norm_period, :])
+    if norm_period is None:
+        scaler.fit(data_ts.loc[:pd.Timedelta(len(3600) // 2, unit='s')])
+    else:
+        scaler.fit(data_ts.loc[:pd.Timedelta(norm_period, unit='s')])
     dfp = pd.DataFrame(scaler.transform(
         data_ts.values), columns=data_ts.columns)
     dfp.index = np.round(
@@ -103,8 +105,8 @@ def _legend_maker(mapper, ax):
                         bbox_to_anchor=(0.2, 0.99),
                         handles=patches,
                         frameon=True,
-                        markerscale=10, prop={'size': 80.5})
-    legends.set_title(title='Neuron Categories', prop={'size': 90})
+                        markerscale=10)
+    legends.set_title(title='Neuron Categories')
     return ax
 
 
