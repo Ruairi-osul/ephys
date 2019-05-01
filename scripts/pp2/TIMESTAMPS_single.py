@@ -11,7 +11,7 @@ def _get_options():
         description='''Concatenate and Extract Timestamps from ADC files''')
     parser.add_argument('-p', '--path', required=True,
                         help='''Path to ADC files. 
-                        *** Separate pre_path.continuous,exp_path.continuous with COMMAS ***''')
+                        *** Separate pre_path.continuous,exp_path.continuous with : COLONS : ***''')
     parser.add_argument('-d', '--destination', required=False,
                         help='''specify the directory for the output file to be written''')
     return parser.parse_args()
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     args = vars(_get_options())
     if 'destination' not in args.keys():
         args['destination'] = os.getcwd()
-    pre_path, exp_path = args['path'].split(',')
+    pre_path, exp_path = args['path'].split(':')
     main(pre_path=pre_path,
          exp_path=exp_path,
          destination=args['destination'])

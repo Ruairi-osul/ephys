@@ -1,0 +1,12 @@
+{
+    "home_dir": "/media/ruairi/big_bck/ESHOCK",
+    "continuous_dir": "/media/ruairi/big_bck/ESHOCK/continuous",
+    "tmp_dat_dir": "/media/ruairi/big_bck/ESHOCK/temp_dat_dir",
+    "probe_dat_dir": "/media/ruairi/big_bck/ESHOCK/probe_dat_files",
+    "blocks": [
+        "pre",
+        "shock",
+        "pre_dpat",
+        "dpat"
+    ]
+}
