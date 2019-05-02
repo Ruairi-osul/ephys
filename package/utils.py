@@ -19,7 +19,7 @@ MAX_NUMBER_OF_RECORDS = int(1e6)
 MAX_NUMBER_OF_EVENTS = int(1e6)
 
 
-def _load_dat_data(p, n_chans=32):
+def load_dat_data(p, n_chans=32):
     tmp = np.memmap(p, dtype=np.int16)
     shp = int(len(tmp) / n_chans)
     return np.memmap(p, dtype=np.int16,

@@ -19,41 +19,6 @@ MAX_NUMBER_OF_RECORDS = int(1e6)
 MAX_NUMBER_OF_EVENTS = int(1e6)
 
 
-def _load_dat_data(p, n_chans=32):
-    tmp = np.memmap(p, dtype=np.int16)
-    shp = int(len(tmp) / n_chans)
-    return np.memmap(p, dtype=np.int16,
-                     shape=(shp, n_chans))
-
-
-def _extract_waveforms(spk_tms, raw_data, ret='data',
-                       n_spks=800, n_samps=240, n_chans=32):
-    assert len(spk_tms) > n_spks, 'Not ennough spikes'
-    spk_tms = spk_tms.values
-    window = np.arange(int(-n_samps / 2), int(n_samps / 2))
-    wvfrms = np.zeros((n_spks, n_samps, n_chans))
-    for i in range(n_spks):
-        srt = int(spk_tms[i] + window[0])
-        end = int(spk_tms[i] + window[-1] + 1)
-        srt = srt if srt > 0 else 0
-        try:
-            wvfrms[i, :, :] = raw_data[srt:end, :]
-        except ValueError:
-            filler = np.empty((n_samps, n_chans))
-            filler[:] = np.nan
-            wvfrms[i, :, :] = filler
-    wvfrms = pd.DataFrame(np.nanmean(wvfrms, axis=0),
-                          columns=range(1, n_chans + 1))
-    norm = wvfrms - np.mean(wvfrms)
-    tmp = norm.apply(np.min, axis=0)
-    good_chan = tmp.idxmin()
-    wvfrms = wvfrms.loc[:, good_chan]
-    if ret == 'data':
-        return wvfrms
-    else:
-        return good_chan
-
-
 def gen_spikes_ts_df(spike_clusters, spike_times, good_cluster_nums):
     data = {'cluster_id': spike_clusters.flatten(),
             'spike_times': spike_times.flatten()}
@@ -166,7 +131,7 @@ def load_kilosort_arrays(parent_dir):
     return spike_clusters, spike_times, cluster_groups
 
 
-def get_good_cluster_numbers(cluster_groups_df):
+def get_good_cluster_numbers(cluster_groups_df, mua=False):
     '''
     Takes the cluster_groups pandas DataFrame fomed during data loading and returns a numpy array of cluster
     ids defined as 'Good' during kilosort and phy spike sorting
@@ -175,7 +140,11 @@ def get_good_cluster_numbers(cluster_groups_df):
     Returns:
         A numpy array of 'Good' cluster ids
     '''
-    good_clusters_df = cluster_groups_df.loc[cluster_groups_df['group'] == 'good', :]
+    if mua:
+        good_clusters_df = cluster_groups_df.loc[(
+            cluster_groups_df['group'] == 'good') | (cluster_groups_df['group'] == 'mua'), :]
+    else:
+        good_clusters_df = cluster_groups_df.loc[cluster_groups_df['group'] == 'good', :]
     return good_clusters_df['cluster_id'].values
 
 

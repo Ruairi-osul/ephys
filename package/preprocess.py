@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from copy import deepcopy
 from functools import partial
-from utils import (_load_dat_data, _extract_waveforms, gen_spikes_ts_df,
+from utils import (load_dat_data, _extract_waveforms, gen_spikes_ts_df,
                    load_kilosort_arrays, get_good_cluster_numbers,
                    loadFolderToArray, _get_sorted_channels,
                    readHeader, _walklevel, _has_ext)
@@ -32,7 +32,7 @@ def get_waveforms(spike_data, rd):
         spike_data: pandas df of spike times and cluster ids as cols
         rid
     '''
-    raw_data = _load_dat_data(p=os.path.join(
+    raw_data = load_dat_data(p=os.path.join(
         rd, os.path.basename(rd)) + '.dat')
     f1 = partial(_extract_waveforms, raw_data=raw_data, ret='data')
     f2 = partial(_extract_waveforms, raw_data=raw_data, ret='')

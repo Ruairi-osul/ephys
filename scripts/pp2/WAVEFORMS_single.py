@@ -1,73 +1,70 @@
 import argparse
+from preprocess import get_spike_times, load_dat_data, get_waveforms
+from functools import partial
+import pandas as pd
+import os
+import json
+import numpy as np
 
 
 def _get_options():
     parser = argparse.ArgumentParser(
-        description='')
+        description='get waveforms from a single file')
 
-    parser.add_argument('-', '--', required=False,
-                        help='')
+    parser.add_argument('-j', '--dirs_json', required=False,
+                        help='path to dirs.json config file')
+    parser.add_argument('-f', '--dat_file_dir', required=False,
+                        help='path to directory where raw data dat file is located')
+    parser.add_argument('-a', '--all', action='store_true',
+                        help='use this flag to run all. must be used in combination with dirs.json')
 
-    parser.add_argument('-', '--', required=,
-                        help='')
     return parser.parse_args()
 
 
-def get_waveforms(spike_data, rd):
-    '''Given a pandas df of spike times and the path to
-    a the parent directory of the .dat file containing the raw
-    data for that recording, extracts waveforms for each cluester
-    and the channel on which that cluster had the highest amplitude
-
-    params:
-        spike_data: pandas df of spike times and cluster ids as cols
-        rid
-    '''
-    raw_data = _load_dat_data(p=os.path.join(
-        rd, os.path.basename(rd)) + '.dat')
-    f1 = partial(_extract_waveforms, raw_data=raw_data, ret='data')
-    f2 = partial(_extract_waveforms, raw_data=raw_data, ret='')
-    waveforms = spike_data.groupby('cluster_id')['spike_times'].apply(
-        f1, raw_data=raw_data).apply(pd.Series).reset_index()
-    chans = spike_data.groupby('cluster_id')[
-        'spike_times'].apply(f2,
-                             raw_data=raw_data).apply(pd.Series).reset_index()
-    chans.columns = ['cluster_id', 'channel']
-    waveforms.columns = ['cluster_id', 'sample', 'value']
-    return waveforms, chans
+def load_json(path):
+    with open(path) as f:
+        out = json.loads(f.read())
+    return out
 
 
-def _extract_waveforms(spk_tms, raw_data, ret='data',
-                       n_spks=800, n_samps=240, n_chans=32):
-    assert len(spk_tms) > n_spks, 'Not ennough spikes'
-    spk_tms = spk_tms.values
-    window = np.arange(int(-n_samps / 2), int(n_samps / 2))
-    wvfrms = np.zeros((n_spks, n_samps, n_chans))
-    for i in range(n_spks):
-        srt = int(spk_tms[i] + window[0])
-        end = int(spk_tms[i] + window[-1] + 1)
-        srt = srt if srt > 0 else 0
-        try:
-            wvfrms[i, :, :] = raw_data[srt:end, :]
-        except ValueError:
-            filler = np.empty((n_samps, n_chans))
-            filler[:] = np.nan
-            wvfrms[i, :, :] = filler
-    wvfrms = pd.DataFrame(np.nanmean(wvfrms, axis=0),
-                          columns=range(1, n_chans + 1))
-    norm = wvfrms - np.mean(wvfrms)
-    tmp = norm.apply(np.min, axis=0)
-    good_chan = tmp.idxmin()
-    wvfrms = wvfrms.loc[:, good_chan]
-    if ret == 'data':
-        return wvfrms
+def get_paths(args):
+    if not os.path.isabs(args['dat_file_dir']):
+        assert args['dirs_json'], 'Must either pass full path or dirs.json config file'
+        dat_file_dir = os.path.join(
+            args['probe_dat_dir'], args['dat_file_dir'])
+        name = args['dat_file_dir']
     else:
-        return good_chan
+        dat_file_dir = args['dat_file_dir']
+        name = os.path.split(args['dat_file_dir'])[-1]
+    return dat_file_dir, name
 
 
-def main():
-    pass
+def main(dat_file_dir, name):
+    spike_df = get_spike_times(dat_file_dir, r_id=name, mua=False)
+    if len(spike_df) == 0:
+        return
+    waveforms, chans = get_waveforms(spike_df, dat_file_dir)
+
+    waves_out = os.path.join(dat_file_dir, 'waveforms.csv')
+    waveforms.to_csv(waves_out, index=False)
+
+    chans_out = os.path.join(dat_file_dir, 'chans.csv')
+    chans.to_csv(chans_out, index=False)
+
+    spikes_out = os.path.join(dat_file_dir, 'good_spikes.csv')
+    spike_df.to_csv(spikes_out, index=False)
 
 
 if __name__ == "__main__":
-    main()
+    args = vars(_get_options())
+    args.update(load_json(args['dirs_json']))
+
+    if not args['all']:
+        dat_file_dir, name = get_paths(args)
+        main(dat_file_dir, name)
+    else:
+        assert args['dirs_json'], 'must pass dirs.json for running batch'
+        for name in os.listdir(args['probe_dat_dir']):
+            print(name)
+            dat_file_dir = os.path.join(args['probe_dat_dir'], name)
+            main(dat_file_dir, name)

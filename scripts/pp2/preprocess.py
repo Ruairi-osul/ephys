@@ -3,23 +3,29 @@ import pandas as pd
 import os
 from copy import deepcopy
 from functools import partial
-from utils import (_load_dat_data, _extract_waveforms, gen_spikes_ts_df,
-                   load_kilosort_arrays, get_good_cluster_numbers,
+from utils import (gen_spikes_ts_df, get_good_cluster_numbers,
                    loadFolderToArray, _get_sorted_channels,
-                   readHeader, _walklevel, _has_ext)
+                   readHeader)
 
 
-def get_spike_times(p, r_id=None):
+def get_spike_times(p, r_id=None, mua=False):
     '''Given a path to a dictory containing kilosort files,
     returns a pandas dataframe with spike times of clusters
     marked as good during spike sorting. You can optionally specify
     a the recording id for further identification'''
     spk_c, spk_tms, c_gps = load_kilosort_arrays(p)
-    clusters = get_good_cluster_numbers(c_gps)
+    clusters = get_good_cluster_numbers(c_gps, mua)
     df = gen_spikes_ts_df(spk_c, spk_tms, clusters)
     if r_id is not None:
-        df['recording_id'] = r_id
+        df['recording_name'] = r_id
     return df
+
+
+def load_dat_data(p, n_chans=32):
+    tmp = np.memmap(p, dtype=np.int16)
+    shp = int(len(tmp) / n_chans)
+    return np.memmap(p, dtype=np.int16,
+                     shape=(shp, n_chans))
 
 
 def get_waveforms(spike_data, rd):
@@ -32,48 +38,77 @@ def get_waveforms(spike_data, rd):
         spike_data: pandas df of spike times and cluster ids as cols
         rid
     '''
-    raw_data = _load_dat_data(p=os.path.join(
+    raw_data = load_dat_data(p=os.path.join(
         rd, os.path.basename(rd)) + '.dat')
     f1 = partial(_extract_waveforms, raw_data=raw_data, ret='data')
     f2 = partial(_extract_waveforms, raw_data=raw_data, ret='')
+
     waveforms = spike_data.groupby('cluster_id')['spike_times'].apply(
         f1, raw_data=raw_data).apply(pd.Series).reset_index()
+
     chans = spike_data.groupby('cluster_id')[
         'spike_times'].apply(f2,
                              raw_data=raw_data).apply(pd.Series).reset_index()
+
     chans.columns = ['cluster_id', 'channel']
     waveforms.columns = ['cluster_id', 'sample', 'value']
     return waveforms, chans
 
 
-def get_subfolders(parent, containing_filetype=None, verbose=True):
-    '''Used in automatic preprocessing [continuous -> .dat -> kilosort]
+def _extract_waveforms(spk_tms, raw_data, ret='data',
+                       n_spks=800, n_samps=240, n_chans=32):
+    assert len(spk_tms) > n_spks, 'Not ennough spikes'
+    spk_tms = spk_tms.values
+    window = np.arange(int(-n_samps / 2), int(n_samps / 2))
+    wvfrms = np.zeros((n_spks, n_samps, n_chans))
+    for i in range(n_spks):
+        srt = int(spk_tms[i] + window[0])
+        end = int(spk_tms[i] + window[-1] + 1)
+        srt = srt if srt > 0 else 0
+        try:
+            wvfrms[i, :, :] = raw_data[srt:end, :]
+        except ValueError:
+            filler = np.empty((n_samps, n_chans))
+            filler[:] = np.nan
+            wvfrms[i, :, :] = filler
+    wvfrms = pd.DataFrame(np.nanmean(wvfrms, axis=0),
+                          columns=range(1, n_chans + 1))
+    norm = wvfrms - np.mean(wvfrms)
+    tmp = norm.apply(np.min, axis=0)
+    good_chan = tmp.idxmin()
+    wvfrms = wvfrms.loc[:, good_chan]
+    if ret == 'data':
+        return wvfrms
+    else:
+        return good_chan
 
-    Given a parant directory, provides subdirectories that
 
-    Usage:
-        dirs_with_npy_files =  get_subfolders(
-            some_dir, containing_filetype='.npy')
+def load_kilosort_arrays(parent_dir):
     '''
-
-    # get paths
+    Loads arrays generated during kilosort into numpy arrays and pandas DataFrames
+    Parameters:
+        parent_dir       = name of the parent_dir being analysed
+    Returns:
+        spike_clusters  = numpy array of len(num_spikes) identifying the cluster from which each spike arrose
+        spike_times     = numpy array of len(num_spikes) identifying the time in samples at which each spike occured
+        cluster_groups  = pandas DataDrame with one row per cluster and column 'cluster_group' identifying whether
+                          that cluster had been marked as 'Noise', 'MUA' or 'Good'
+    '''
     try:
-        paths = [x[0]
-                 for x in _walklevel(parent, level=1) if
-                 os.path.isdir(x[0])]
-        if parent in paths:
-            del paths[paths.index(parent)]
-    except AssertionError:
-        if verbose:
-            print('Could not find {} dir'.format(parent))
+        spike_clusters = np.load(os.path.join(
+            parent_dir, 'spike_clusters.npy'))
+        spike_times = np.load(os.path.join(parent_dir, 'spike_times.npy'))
+        cluster_groups = pd.read_csv(os.path.join(
+            parent_dir, 'cluster_groups.csv'), sep='\t')
+    except IOError:
+        print('Error loading Kilosort Files. Files not found')
         raise
-
-    # filter to only have the ext.
-    if containing_filetype:
-        f = partial(_has_ext, ext=containing_filetype)
-        paths = list(filter(f, paths))
-
-    return paths
+    try:  # check data quality
+        assert np.shape(spike_times.flatten()) == np.shape(spike_clusters)
+    except AssertionError:
+        AssertionError('Array lengths do not match in parent_dir {}'.format(
+            parent_dir))
+    return spike_clusters, spike_times, cluster_groups
 
 
 def loadContinuous(filepath, dtype=float):
@@ -199,94 +234,3 @@ def pack_2(folderpath, filename='', channels='all', chprefix='CH',
         filename = source + '_' + chprefix + 's' + session + '.dat'
     print('Packing data to file: ' + filename)
     data_array.tofile(os.path.join(folderpath, filename))
-
-
-def update_tble(tbl, n_data, ind_name=None):
-    '''Updates a table with n_data. n_data must be in the same format as tbl.
-
-    '''
-    if not ind_name:
-        ind_name = tbl.columns[0]
-
-    # checks num columns
-    assert len(tbl.columns.values) == (len(n_data.columns.values) + 1), '''
-    Columns do not match [should be one less in to be updated]:
-        new data       {a}
-        to be updated  {b}'''.format(a=n_data, b=tbl)
-
-    # sets index of table to be primary key for later concatenation
-    tbl.set_index(ind_name, inplace=True)
-
-    if len(tbl) == 0:
-        # if table to be updated is empty, set new data as output
-        updated = n_data
-        updated.index = pd.RangeIndex(0, len(n_data))
-
-    else:
-        # if it is not empty, set highest value in primary key to be index
-        # of new data, then concatenate them on top of each other
-        i = int(tbl.index.max())
-        n_data.index = pd.RangeIndex(i + 1, i + 1 + len(n_data))
-        updated = pd.concat([tbl, n_data])
-
-    # set the name of the primary key and convert back from index to a column
-    updated.index.name = ind_name
-    updated = updated.reset_index()
-
-    # check that
-    _check_primary_key(updated, ind_name)  # no duplicates in primary key
-    _check_concat(updated, tbl.reset_index())  # no changes in column numbers
-
-    return updated
-
-
-def load_table(table=None, d=None):
-    '''given a parent path and table name, returns table as pandas df
-    of the table
-
-    params:
-        d = parent dir of db tables
-        table = name of table. can be path to table if d not specified
-
-    Usage:
-        df = load_table('neurons', d='~/data/db')
-    '''
-
-    assert table, 'table to load not specified'
-    if not table.endswith('.csv'):
-        table = ''.join([table, '.csv'])
-
-    if os.path.isabs(table):
-        p = table
-    else:
-        assert d, 'no parent diectory given to load_table'
-        p = os.path.join(d, table)
-
-    try:
-        return pd.read_csv(p)
-    except (IOError, OSError):
-        raise ValueError('''\nTable name specified but not found.
-            Tried to load: %s''' % p)
-
-
-def _check_primary_key(tbl, key):
-    m = '''Duplicate primary key in the following table:
-    \t\t{t}
-    \nDuplicate on key {k}'''.format(t=tbl, k=key)
-    assert np.max(tbl[key].value_counts()) == 1, m
-
-
-def _check_concat(updated, pre):
-    ncols_u = len(updated.columns)
-    ncols_p = len(pre.columns)
-    m = '''Column numbers altered following concatenation
-    pre df:
-        data:\n{p}
-        col nums =\n\n{pc}
-
-    post df:
-        data:\n\n{u}
-        col nums = {uc}
-    '''.format(p=pre, u=updated, pc=str(ncols_p),
-               uc=str(ncols_u))
-    assert ncols_u == ncols_p, m
